@@ -1,0 +1,18 @@
+project:
+  type: website
+
+website:
+  title: "p9"
+  site-url: https://kiwidamien.github.io/p9
+  description: "Examples of plotting in plotnine, the python port of ggplot2"
+  navbar:
+    right:
+      - blog.qmd
+      - icon: github
+        href: https://github.com/kiwidamien
+format:
+  html:
+    theme: theme.scss
+
+
+
