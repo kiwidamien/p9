@@ -4,7 +4,7 @@
     "href": "blog.html",
     "title": "p9",
     "section": "",
-    "text": ":::: {.columns}\n\n\nSeries\n\nggplot2-series\nThis series contains a great deal of tips, tricks and packages that you can use to level up your ggplot game.\n\n\n\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 27, 2024\n\n\n1 min\n\n\n\n\n\n\n\nNotebook code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 27, 2024\n\n\n1 min\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nApr 24, 2024\n\n\n1 min\n\n\n\n\n\n\n\nThis is a dummy blog posts\n\n\n\n\n\n\n123\n\n\nSecond Tag\n\n\n\nThis is a test post. In this post, I try out different functionalities\n\n\n\n\n\nJun 1, 2022\n\n\n1 min\n\n\n\n\n\n\nNo matching items"
+    "text": ":::: {.columns}\n\n\nSeries\n\nggplot2-series\nThis series contains a great deal of tips, tricks and packages that you can use to level up your ggplot game.\n\n\n\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Title\n        \n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n1 min\n\n\n\n\n\n\n\nPost With Code\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\nApr 27, 2024\n\n\n1 min\n\n\n\n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nApr 24, 2024\n\n\n1 min\n\n\n\n\n\n\n\nThis is a dummy blog posts\n\n\n\n\n\n\n123\n\n\nSecond Tag\n\n\n\nThis is a test post. In this post, I try out different functionalities\n\n\n\n\n\nJun 1, 2022\n\n\n1 min\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -16,9 +16,9 @@
   {
     "objectID": "posts/ggplot2-tips/plot9-first.html",
     "href": "posts/ggplot2-tips/plot9-first.html",
-    "title": "Notebook code",
+    "title": "p9",
     "section": "",
-    "text": "import plotnine as p9\nimport pandas as pd\n\n\ndf = pd.DataFrame({\n    'x': [1,2,3],\n    'y': [4,5,6]\n})\n\n\n(\n    p9.ggplot(df, p9.aes(x='x', y='y'))\n    + p9.geom_line()\n)"
+    "text": "+++ title: “Notebook code” author: “Damien Martin” date: “2024-04-27” categories: [news, code, analysis] image: “image.jpg” description: “Hey Peter, what’s happening? We are going to need you to come in on Saturday, so if you can go ahead and just do that, that would be great.” +++\n\nimport plotnine as p9\nimport pandas as pd\n\n\ndf = pd.DataFrame({\n    'x': [1,2,3],\n    'y': [4,5,6]\n})\n\n\n(\n    p9.ggplot(df, p9.aes(x='x', y='y'))\n    + p9.geom_line()\n)"
   },
   {
     "objectID": "posts/new_blog_post/post.html",
@@ -53,6 +53,6 @@
     "href": "ggplot-series.html",
     "title": "Series: ggplot2-tips",
     "section": "",
-    "text": "Notebook code\n\n\n\n\n\n\n\n\n\n\n\nApr 27, 2024\n\n\n1 min\n\n\n\n\n\n\nNo matching items"
+    "text": "1 min\n\n\n\n\n\n\nNo matching items"
   }
 ]
