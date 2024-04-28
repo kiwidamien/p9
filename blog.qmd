@@ -11,9 +11,13 @@ listing:
 page-layout: full
 title-block-banner: false 
 ---
+:::: {.columns}
 
+::: {.column width="40%"}
 # Series
 
 ##### [ggplot2-series](ggplot-series.html)
 This series contains a great deal of tips, tricks and packages 
 that you can use to level up your ggplot game.
+:::
+

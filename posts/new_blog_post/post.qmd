@@ -22,12 +22,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam suscipit est nec du
 
 This is `inline` code plus a small code chunk.
 
-```{r}
-library(tidyverse)
-
-ggplot(mpg) +
-  geom_jitter(aes(cty, hwy), size = 4, alpha = 0.5) 
-```
 
 
 ### 3 - Tabsets
