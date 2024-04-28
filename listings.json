@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/making-categorical-variables.html",
       "/posts/post-with-code/index.html",
       "/posts/ggplot2-tips/plot9-first.html",
       "/posts/welcome/index.html",
@@ -11,6 +12,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/making-categorical-variables.html",
       "/posts/ggplot2-tips/plot9-first.html"
     ]
   }
