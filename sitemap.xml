@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kiwidamien.github.io/p9/blog.html</loc>
+    <lastmod>2024-04-28T16:22:47.928Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/index.html</loc>
     <lastmod>2024-04-27T22:29:05.755Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
-    <lastmod>2024-04-27T22:29:05.757Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/plot9-first.html</loc>
+    <lastmod>2024-04-28T16:19:44.438Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/new_blog_post/post.html</loc>
@@ -17,7 +21,11 @@
     <lastmod>2024-04-27T22:29:05.756Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/index.html</loc>
-    <lastmod>2024-04-27T22:29:05.755Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
+    <lastmod>2024-04-27T22:29:05.757Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/ggplot-series.html</loc>
+    <lastmod>2024-04-28T16:21:33.615Z</lastmod>
   </url>
 </urlset>

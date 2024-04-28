@@ -3,8 +3,15 @@
     "listing": "/blog.html",
     "items": [
       "/posts/post-with-code/index.html",
+      "/posts/ggplot2-tips/plot9-first.html",
       "/posts/welcome/index.html",
       "/posts/new_blog_post/post.html"
+    ]
+  },
+  {
+    "listing": "/ggplot-series.html",
+    "items": [
+      "/posts/ggplot2-tips/plot9-first.html"
     ]
   }
 ]
