@@ -188,6 +188,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
   </ul>
 </nav>
     </div>
@@ -200,12 +202,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="problem" class="level1">
 <h1>Problem</h1>
-<p>Plotnine assumes that numeric variables are continuous, rather than discrete.</p>
+<p>Plotnine assumes that numeric variables are continuous, rather than discrete. When plotting, some attributes require discrete / categorical variables (e.g.&nbsp;shape). Some variables can support either continuous or discrete features (e.g.&nbsp;size, colour), but the legends can be clearer for discrete variables.</p>
+<p>Examples of where a numeric feature is categorical:</p>
+<ul>
+<li>Cell ids in A/B tests (e.g.&nbsp;cell 1 is control, cell 2 is treatment)</li>
+<li>SKU ids (SKU 542354 and SKU 542355 should not be considered “close”, they are two arbitrary numbers that label the products)</li>
+</ul>
+<p>The example that I will use here is the number of cylinders in a car in the <code>mtcars</code> dataset.</p>
+</section>
+<section id="solution" class="level1">
+<h1>Solution</h1>
+<p>Use <code>"factor(variable_name)"</code> in the athestics, rather than just <code>"variable_name"</code>.</p>
+</section>
+<section id="example" class="level1">
+<h1>Example</h1>
 <div id="cell-2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars </span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example without factor, cylinders are discrete but the color scale is </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Example without factor, cylinders are discrete but the colour scale is </span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># continuous </span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(mtcars, p9.aes(x<span class="op">=</span><span class="st">'mpg'</span>, y<span class="op">=</span><span class="st">'wt'</span>, color<span class="op">=</span><span class="st">'cyl'</span>))</span>
@@ -213,25 +228,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="making-categorical-variables_files/figure-html/cell-2-output-1.png" class="img-fluid figure-img"></p>
+<figcaption>An example that doesn’t use factor, so the color shows as a gradient</figcaption>
 </figure>
 </div>
 </div>
 </div>
 <p>Using <code>"factor(cyl)"</code> to force the integer number of cylinders to be seen as discrete, even though it is a numeric variable.</p>
 <div id="cell-4" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(mtcars, p9.aes(x<span class="op">=</span><span class="st">'mpg'</span>, y<span class="op">=</span><span class="st">'wt'</span>, color<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point()</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(mtcars, p9.aes(x<span class="op">=</span><span class="st">'mpg'</span>, y<span class="op">=</span><span class="st">'wt'</span>, color<span class="op">=</span><span class="st">'factor(cyl)'</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="making-categorical-variables_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+<figcaption>An example using factor; colours show discretely and are easier to identify</figcaption>
 </figure>
 </div>
 </div>
@@ -244,9 +260,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_color_discrete(name<span class="op">=</span><span class="st">"Cylinders"</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<div>
+<div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="making-categorical-variables_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+<figcaption>An example using factor and renaming the colour scale to something readable</figcaption>
 </figure>
 </div>
 </div>
@@ -259,20 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
     <hr>
     
-    <h3> Stay in touch </h3>
-    
-    <p> If you enjoyed this post, then don't miss out on any future posts by subscribing to my email newsletter. </p>
-    
-    <iframe id="beehiiv-form" src="https://embeds.beehiiv.com/9232d2a2-6e85-4beb-b8ed-1de94e9e4f01?slim=true" data-test-id="beehiiv-embed" frameborder="0" scrolling="no" style="margin: 0; border-radius: 0px !important; background-color: transparent; height: 55px;"></iframe>
-    
-    
-    <h3> Support my work with a coffee </h3>
-    
-    <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="rappa753" data-color="#06436e" data-emoji="☕" data-font="Lato" data-text="Support me" data-outline-color="#ffffff" data-font-color="#ffffff" data-coffee-color="#FFDD00" data-height="40px"></script>
-    
-    <h3> Share </h3>
-    
-    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-size="large" data-hashtags="#rstats" data-show-count="false">Tweet</a><script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <h4> Stay in touch </h4>
     
     <hr>
     </div>

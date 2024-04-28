@@ -6,10 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Tristan O’Malley">
-<meta name="dcterms.date" content="2024-04-24">
+<meta name="author" content="Damien Martin">
+<meta name="dcterms.date" content="2024-04-28">
+<meta name="description" content="Shows how to add error bars/regions manually to plots, both as a region of uncertainty, and on individual data points.">
 
-<title>p9 - Welcome To My Blog</title>
+<title>p9 - Making manual error bars / error regions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -109,9 +110,16 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Welcome To My Blog</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">news</div>
+      <h1 class="title">Making manual error bars / error regions</h1>
+                  <div>
+        <div class="description">
+          Shows how to add error bars/regions manually to plots, both as a region of uncertainty, and on individual data points.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">data-vis</div>
+                <div class="quarto-category">plotnine</div>
+                <div class="quarto-category">snippet</div>
               </div>
                   </div>
   </div>
@@ -122,14 +130,14 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Tristan O’Malley </p>
+               <p>Damien Martin </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 24, 2024</p>
+        <p class="date">April 28, 2024</p>
       </div>
     </div>
     
@@ -141,7 +149,15 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -150,11 +166,23 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>This is the first post in a Quarto blog. Welcome!</p>
-<p><img src="thumbnail.jpg" class="img-fluid"></p>
-<p>Since this post doesn’t specify an explicit <code>image</code>, the first image in the post will be used in the listing page of posts.</p>
+<section id="problem" class="level1">
+<h1>Problem</h1>
+<p>There are lots of examples of being able to do a linear regression, and have plotnine draw the region of uncertainity automatically.</p>
+<p>There are fewer examples (or they are harder to find) of how to add error bars or error regions that you have already calculated.</p>
+</section>
+<section id="solution" class="level1">
+<h1>Solution</h1>
+<p>For error regions, we use</p>
+<pre><code>geom_ribbon()</code></pre>
+<p>For error bars, we use</p>
+<pre><code>geom_XXXX</code></pre>
+</section>
+<section id="example" class="level1">
+<h1>Example</h1>
 
 
+</section>
 
 </main> <!-- /main -->
 <div>
