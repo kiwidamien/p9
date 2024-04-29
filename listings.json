@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
       "/posts/ggplot2-tips/making-percentage-labels.html",
       "/posts/ggplot2-tips/making-manual-error-bars.html",
       "/posts/ggplot2-tips/dual_bar/dual_bar.html",
@@ -14,6 +15,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
       "/posts/ggplot2-tips/making-percentage-labels.html",
       "/posts/ggplot2-tips/making-manual-error-bars.html",
       "/posts/ggplot2-tips/dual_bar/dual_bar.html",
