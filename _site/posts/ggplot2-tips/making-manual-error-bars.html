@@ -60,7 +60,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -103,6 +103,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -189,7 +192,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  <li><a href="#example-of-a-ribbon" id="toc-example-of-a-ribbon" class="nav-link" data-scroll-target="#example-of-a-ribbon">Example of a ribbon</a></li>
+  <li><a href="#example-of-error-bars" id="toc-example-of-error-bars" class="nav-link" data-scroll-target="#example-of-error-bars">Example of error bars</a></li>
   </ul>
 </nav>
     </div>
@@ -214,8 +218,114 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>p9.geom_pointrange(mapping<span class="op">=</span>p9.aes(ymin<span class="op">=</span><span class="st">'columnname'</span>, ymax<span class="op">=</span><span class="st">'columnname'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>The difference is that the <code>geom_errorbar</code> draws crossbars at the top and bottom, while <code>geom_pointrange</code> only draws the vertical line.</p>
 </section>
-<section id="example" class="level1">
-<h1>Example</h1>
+<section id="example-of-a-ribbon" class="level1">
+<h1>Example of a ribbon</h1>
+<p>Let’s look at an A/B test, where we are looking for a change in conversion from an email</p>
+<div id="cell-4" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>emails <span class="op">=</span> pd.read_csv(<span class="st">'composing/email.csv'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>emails[<span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(emails[<span class="st">'date'</span>])</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>emails.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">recipients</th>
+<th data-quarto-table-cell-role="th">clicks</th>
+<th data-quarto-table-cell-role="th">ctr</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2024-02-01</td>
+<td>99886</td>
+<td>1456</td>
+<td>0.014577</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2024-02-02</td>
+<td>100220</td>
+<td>1491</td>
+<td>0.014877</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2024-02-03</td>
+<td>99637</td>
+<td>1498</td>
+<td>0.015035</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2024-02-04</td>
+<td>99344</td>
+<td>1543</td>
+<td>0.015532</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2024-02-05</td>
+<td>100091</td>
+<td>1559</td>
+<td>0.015576</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cell-5" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>emails[<span class="st">'lower'</span>] <span class="op">=</span>  emails[<span class="st">'ctr'</span>] <span class="op">-</span> <span class="fl">1.96</span> <span class="op">*</span> np.sqrt(emails[<span class="st">'ctr'</span>]<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>emails[<span class="st">'ctr'</span>]) <span class="op">/</span> emails[<span class="st">'recipients'</span>])</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>emails[<span class="st">'upper'</span>] <span class="op">=</span>  emails[<span class="st">'ctr'</span>] <span class="op">+</span> <span class="fl">1.96</span> <span class="op">*</span> np.sqrt(emails[<span class="st">'ctr'</span>]<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>emails[<span class="st">'ctr'</span>]) <span class="op">/</span> emails[<span class="st">'recipients'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-6" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(emails, p9.aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'ctr'</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_ribbon(mapping<span class="op">=</span>p9.aes(ymin<span class="op">=</span><span class="st">'lower'</span>, ymax<span class="op">=</span><span class="st">'upper'</span>), fill<span class="op">=</span><span class="st">'blue'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">"click-thru-rate"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="making-manual-error-bars_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-of-error-bars" class="level1">
+<h1>Example of error bars</h1>
+<p>We can use the same dataset with points and error bars instead:</p>
+<div id="cell-9" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(emails, p9.aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'ctr'</span>))</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_errorbar(mapping<span class="op">=</span>p9.aes(ymin<span class="op">=</span><span class="st">'lower'</span>, ymax<span class="op">=</span><span class="st">'upper'</span>), alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">"click-thru-rate"</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="making-manual-error-bars_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
 </section>

@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Damien Martin">
-<meta name="dcterms.date" content="2024-04-28">
-<meta name="description" content="Populations pyramids often show not just the number of people in each age bracket, but also seggregate it by gender.">
+<meta name="dcterms.date" content="2024-04-29">
+<meta name="description" content="Shows how to decompose a plot into different functions, with the goal of being able to modularize the code used.">
 
-<title>p9 - Making dual bar charts</title>
+<title>p9 - Splitting plots into functions</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,10 +147,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Making dual bar charts</h1>
+      <h1 class="title">Splitting plots into functions</h1>
                   <div>
         <div class="description">
-          Populations pyramids often show not just the number of people in each age bracket, but also seggregate it by gender.
+          Shows how to decompose a plot into different functions, with the goal of being able to modularize the code used.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -174,7 +174,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 28, 2024</p>
+        <p class="date">April 29, 2024</p>
       </div>
     </div>
     
@@ -192,8 +192,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
   <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#example-1" id="toc-example-1" class="nav-link" data-scroll-target="#example-1">Example 1</a></li>
-  <li><a href="#example-2" id="toc-example-2" class="nav-link" data-scroll-target="#example-2">Example 2</a></li>
+  <li><a href="#minimal-example" id="toc-minimal-example" class="nav-link" data-scroll-target="#minimal-example">Minimal Example</a></li>
+  <li><a href="#more-useful-example---event-annotation" id="toc-more-useful-example---event-annotation" class="nav-link" data-scroll-target="#more-useful-example---event-annotation">More useful example - event annotation</a></li>
   </ul>
 </nav>
     </div>
@@ -206,37 +206,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="problem" class="level1">
 <h1>Problem</h1>
-<p>Show a bar chart in two different directions from the central dividing line (two bars).</p>
-<p>The typical example is showing the male and female population by age bracket in a population pyramid.</p>
+<p>We want to be able to build up our plots in library functions.</p>
+<p>This is most useful when we want to annotate a standard graph – by having a function that creates the plot, and then being able to call the function and continue adding things to the plot. Conceptually:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>plot_sales(df)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Shows a plot of sales</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># This doesn't work, but want to highlight a particular month</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>plot_sales(df) <span class="op">+</span> p9.geom_rect(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    mapping<span class="op">=</span>p9.aes(xmin<span class="op">=</span><span class="st">'2024-03-01'</span>, xmax<span class="op">=</span><span class="st">'2024-04-01'</span>, ymin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), ymax<span class="op">=</span><span class="bu">float</span>(<span class="st">"inf"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="solution" class="level1">
 <h1>Solution</h1>
-<p>We can use <code>geom_rect</code> or <code>geom_tile</code> to create filled rectangle.</p>
-<ul>
-<li><code>geom_rect</code> takes the coordinates of the upper-left and lower-right corners of the rectangle.</li>
-<li><code>geom_fill</code> takes the coordiantes of the center of the rectangle, as well as it’s width and height.</li>
-</ul>
+<p>Make a list instead, and add the list.</p>
+<p>The above example, done correctly, is</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>plot_sales(df)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Shows a plot of sales</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># This DOES work</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>plot_sales(df) <span class="op">+</span> [</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    p9.geom_rect(mapping<span class="op">=</span>p9.aes(xmin<span class="op">=</span><span class="st">'2024-03-01'</span>, xmax<span class="op">=</span><span class="st">'2024-04-01'</span>, ymin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), ymax<span class="op">=</span><span class="bu">float</span>(<span class="st">"inf"</span>)))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="example-1" class="level1">
-<h1>Example 1</h1>
-<p>From the US Census we have data on the US population by age bracket and gender. We want to make a population pyramid out of this data. We start by loading the data and converting the data into long-form:</p>
-<div id="cell-2" class="cell" data-execution_count="96">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pop <span class="op">=</span> (</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    pd.read_csv(<span class="st">'2022_acs_us_pop.csv'</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    [[<span class="st">'age_bracket_label'</span>, <span class="st">'pop_male'</span>, <span class="st">'pop_female'</span>]]</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    .rename(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        columns<span class="op">=</span>{<span class="st">'pop_male'</span>: <span class="st">'male'</span>, <span class="st">'pop_female'</span>: <span class="st">'female'</span>}</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    ).melt(</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'age_bracket_label'</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        var_name<span class="op">=</span><span class="st">'gender'</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        value_name<span class="op">=</span><span class="st">'population'</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>pop.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="96">
+<section id="minimal-example" class="level1">
+<h1>Minimal Example</h1>
+<div id="cell-3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> mtcars</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-4" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>original <span class="op">=</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(mtcars, p9.aes(x<span class="op">=</span><span class="st">'mpg'</span>, y<span class="op">=</span><span class="st">'hp'</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>original</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="composing-plots_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s say that this is the type of graph we would normally create (e.g.&nbsp;we could make a function that generates it, and only takes the data frame as input).</p>
+<p>If we watned to take this same graph and add to it for a particular report, we can add a list of <code>plotnine</code> objects, as shown below:</p>
+<div id="cell-6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>original <span class="op">+</span> [</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p9.geom_smooth(method<span class="op">=</span><span class="st">'lm'</span>, color<span class="op">=</span><span class="st">'blue'</span>),</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    p9.labs(title<span class="op">=</span><span class="st">'Do more powerful cars have worse milage?'</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            subtitle<span class="op">=</span><span class="st">'Simple linear extrapolation'</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            y<span class="op">=</span><span class="st">'horsepower'</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    p9.theme_bw()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="composing-plots_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>You would not trust that linear extrapolation as it is starting to head below zero. There are more sophisticated smoothing options (e.g.&nbsp;using <code>'loess'</code> as the method instead of <code>'lm'</code>) but they have additional dependencies. The emphasis here is on plotting.</p>
+</section>
+<section id="more-useful-example---event-annotation" class="level1">
+<h1>More useful example - event annotation</h1>
+<p>The example above was a simple example, but not particularly motivating. Let’s look at an example of a conversion rate from emails.</p>
+<p>This is a graph you produce frequently, so you have a function for it</p>
+<div id="cell-11" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>emails <span class="op">=</span> pd.read_csv(<span class="st">'email.csv'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>emails[<span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(emails[<span class="st">'date'</span>])</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>emails.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 <div>
 
@@ -245,41 +290,47 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">age_bracket_label</th>
-<th data-quarto-table-cell-role="th">gender</th>
-<th data-quarto-table-cell-role="th">population</th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">recipients</th>
+<th data-quarto-table-cell-role="th">clicks</th>
+<th data-quarto-table-cell-role="th">ctr</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>Under 5 years</td>
-<td>male</td>
-<td>9725644</td>
+<td>2024-02-01</td>
+<td>99886</td>
+<td>1456</td>
+<td>0.014577</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>5 to 9 years</td>
-<td>male</td>
-<td>10210019</td>
+<td>2024-02-02</td>
+<td>100220</td>
+<td>1491</td>
+<td>0.014877</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>10 to 14 years</td>
-<td>male</td>
-<td>10974635</td>
+<td>2024-02-03</td>
+<td>99637</td>
+<td>1498</td>
+<td>0.015035</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
-<td>15 to 19 years</td>
-<td>male</td>
-<td>11196816</td>
+<td>2024-02-04</td>
+<td>99344</td>
+<td>1543</td>
+<td>0.015532</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
-<td>20 to 24 years</td>
-<td>male</td>
-<td>11400730</td>
+<td>2024-02-05</td>
+<td>100091</td>
+<td>1559</td>
+<td>0.015576</td>
 </tr>
 </tbody>
 </table>
@@ -288,107 +339,109 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Before creating the population pyramid, let’s look at what we get from a using <code>geom_bar</code> (it is a stacked bar chart)</p>
-<div id="cell-4" class="cell" data-execution_count="97">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(x<span class="op">=</span><span class="st">'age_bracket_label'</span>, y<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_bar(stat<span class="op">=</span><span class="st">'identity'</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-12" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_ctr_plot(email_df):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Creates a plotnine plot of email conversion rates against time</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">    email_df contains the following columns</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">        - date (as a datetime object)</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">        - ctr (click through rate, in the range 0-1)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="st">'date'</span> <span class="kw">in</span> email_df, <span class="st">'need a date column'</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> <span class="st">'ctr'</span> <span class="kw">in</span> email_df, <span class="st">'need a ctr column'</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        p9.ggplot(email_df, p9.aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'ctr'</span>))</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.geom_line(color<span class="op">=</span><span class="st">'blue'</span>, alpha<span class="op">=</span><span class="fl">0.7</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.scale_y_continuous(labels<span class="op">=</span><span class="kw">lambda</span> labs:[<span class="ss">f"</span><span class="sc">{</span>value<span class="sc">:.1%}</span><span class="ss">"</span> <span class="cf">for</span> value <span class="kw">in</span> labs])</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.scale_x_date(breaks<span class="op">=</span><span class="st">'2 week'</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">"Click-Thru Rate"</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> p9.theme_bw()</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>make_ctr_plot(emails)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="composing-plots_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-5" class="cell" data-execution_count="123">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pop[<span class="st">'signed_pop'</span>] <span class="op">=</span> pop.<span class="bu">apply</span>(<span class="kw">lambda</span> row:  row.population <span class="cf">if</span> row.gender <span class="op">==</span> <span class="st">'male'</span>  <span class="cf">else</span> <span class="op">-</span>row.population, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We are ending one side of the rectangle on 0,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and the other side on 'signed_pop', so the center is </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># half of the signed_pop</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pop[<span class="st">'center'</span>] <span class="op">=</span> pop[<span class="st">'signed_pop'</span>] <span class="op">/</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-6" class="cell" data-execution_count="124">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pop.age_bracket_label.unique().tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="124">
-<pre><code>['Under 5 years',
- '5 to 9 years',
- '10 to 14 years',
- '15 to 19 years',
- '20 to 24 years',
- '25 to 29 years',
- '30 to 34 years',
- '35 to 39 years',
- '40 to 44 years',
- '45 to 49 years',
- '50 to 54 years',
- '55 to 59 years',
- '60 to 64 years',
- '65 to 69 years',
- '70 to 74 years',
- '75 to 79 years',
- '80 to 84 years',
- '85 years and over']</code></pre>
-</div>
-</div>
-<p>The <code>p9.geom_tile</code> takes an <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> to draw a filled rectangle. The <code>x</code> and <code>y</code> positions are the locations are the “center” of the rectangle, which is why we have calculated the <code>center</code> attribute.</p>
-<div id="cell-8" class="cell" data-execution_count="125">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(x<span class="op">=</span><span class="st">'age_bracket_label'</span>, y<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_tile(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">'center'</span>, width<span class="op">=</span><span class="dv">1</span>, height<span class="op">=</span><span class="st">'signed_pop'</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We can rotate the text, but let’s swap the axes. We will also order the categories correctly.</p>
-<div id="cell-10" class="cell" data-execution_count="126">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(y<span class="op">=</span><span class="st">'age_bracket_label'</span>, x<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_tile(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'center'</span>, height<span class="op">=</span><span class="dv">1</span>, width<span class="op">=</span><span class="st">'signed_pop'</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(y<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This gets the order the same as they appear in the dataframe</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (otherwise is alphabetical)</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_discrete(limits<span class="op">=</span>pop.age_bracket_label.unique().tolist())</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Let’s also format the population, so we are not showing the female population as negative</p>
-<div id="cell-12" class="cell" data-execution_count="128">
+<p>We see in the marketing department materials that they launched a new template on 2024-02-21, which helps explain the increase.</p>
+<p>It is less clear what happened on April 1st which caused the CTR to drop! Digging in a little bit:</p>
+<div id="cell-14" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(y<span class="op">=</span><span class="st">'age_bracket_label'</span>, x<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_tile(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'center'</span>, height<span class="op">=</span><span class="fl">0.9</span>, width<span class="op">=</span><span class="st">'signed_pop'</span>), alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="st">"Population Pyramid (US 2022)"</span>, x<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This gets the order the same as they appear in the dataframe</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (otherwise is alphabetical)</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_discrete(limits<span class="op">=</span>pop.age_bracket_label.unique().tolist())</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_continuous(labels<span class="op">=</span><span class="kw">lambda</span> labs: [<span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(l<span class="op">/</span><span class="fl">1e6</span>)<span class="sc">:.0f}</span><span class="ss"> M"</span> <span class="cf">for</span> l <span class="kw">in</span> labs])</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(panel_border<span class="op">=</span>p9.element_blank())</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        emails.drop(<span class="st">'ctr'</span>, axis<span class="op">=</span><span class="dv">1</span>).melt([<span class="st">'date'</span>]), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        p9.aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="st">'value'</span>, color<span class="op">=</span><span class="st">'variable'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="composing-plots_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="example-2" class="level1">
-<h1>Example 2</h1>
-<p>This example is taken from the ggplot examples of Albert Rapp (the original post is called <a href="https://albert-rapp.de/posts/ggplot2-tips/22_diverging_bar_plot/22_diverging_bar_plot">“How to create diverging bar plots”</a>).</p>
+<p>We see we massively expanded our audience (recipients) and clicks. It makes sense that as you expand the audience, the CTR drops. We still see incremental clicks. But it makes sense that we would want to add that information!</p>
+<div id="cell-16" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>events <span class="op">=</span> pd.DataFrame([</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'date'</span>: <span class="st">'2024-02-19'</span>, <span class="st">'label'</span>: <span class="st">'New email launched'</span>},</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'date'</span>: <span class="st">'2024-04-01'</span>, <span class="st">'label'</span>: <span class="st">'Audience expansion via XYZ.com'</span>}</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>events[<span class="st">'date'</span>] <span class="op">=</span> pd.to_datetime(events[<span class="st">'date'</span>])</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>events</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">label</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2024-02-19</td>
+<td>New email launched</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2024-04-01</td>
+<td>Audience expansion via XYZ.com</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<div id="cell-17" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>make_ctr_plot(emails) <span class="op">+</span> [</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    p9.geom_vline(mapping<span class="op">=</span>p9.aes(xintercept<span class="op">=</span><span class="st">'date'</span>), data<span class="op">=</span>events, linetype<span class="op">=</span><span class="st">'dashed'</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    p9.geom_text(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'date'</span>, y<span class="op">=</span><span class="fl">0.0165</span>, label<span class="op">=</span><span class="st">'label'</span>), data<span class="op">=</span>events, angle<span class="op">=</span><span class="dv">90</span>, nudge_x<span class="op">=-</span><span class="dv">2</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    p9.geom_rect(mapping<span class="op">=</span>p9.aes(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        xmin<span class="op">=</span>pd.to_datetime(<span class="st">'2024-04-01'</span>), xmax<span class="op">=</span>emails[<span class="st">'date'</span>].<span class="bu">max</span>(), ymin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), ymax<span class="op">=</span><span class="bu">float</span>(<span class="st">"inf"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    ), alpha<span class="op">=</span><span class="fl">0.005</span>, fill<span class="op">=</span><span class="st">'cyan'</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    p9.annotate(<span class="st">'text'</span>, x<span class="op">=</span><span class="st">'2024-04-15'</span>, y<span class="op">=</span><span class="fl">0.0183</span>, label<span class="op">=</span><span class="st">"Expanded TAM"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="composing-plots_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This way we can annotate graphs to highlight special events, without having to copy all the plotting code.</p>
 
 
 </section>

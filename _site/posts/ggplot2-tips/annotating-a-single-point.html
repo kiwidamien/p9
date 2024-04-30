@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Damien Martin">
-<meta name="dcterms.date" content="2024-04-28">
-<meta name="description" content="Populations pyramids often show not just the number of people in each age bracket, but also seggregate it by gender.">
+<meta name="dcterms.date" content="2024-05-01">
+<meta name="description" content="How to annotate single data points in a plot">
 
-<title>p9 - Making dual bar charts</title>
+<title>p9 - Annotating single points in datasets</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,59 +23,25 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../../">
-<script src="../../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -103,9 +69,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -117,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../../index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">p9</span>
     </a>
   </div>
@@ -128,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../../blog.html"> 
+    <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">p9</span></a>
   </li>  
   <li class="nav-item compact">
@@ -147,10 +110,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Making dual bar charts</h1>
+      <h1 class="title">Annotating single points in datasets</h1>
                   <div>
         <div class="description">
-          Populations pyramids often show not just the number of people in each age bracket, but also seggregate it by gender.
+          How to annotate single data points in a plot
         </div>
       </div>
                           <div class="quarto-categories">
@@ -174,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 28, 2024</p>
+        <p class="date">May 1, 2024</p>
       </div>
     </div>
     
@@ -191,9 +154,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#example-1" id="toc-example-1" class="nav-link" data-scroll-target="#example-1">Example 1</a></li>
-  <li><a href="#example-2" id="toc-example-2" class="nav-link" data-scroll-target="#example-2">Example 2</a></li>
   </ul>
 </nav>
     </div>
@@ -206,189 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="problem" class="level1">
 <h1>Problem</h1>
-<p>Show a bar chart in two different directions from the central dividing line (two bars).</p>
-<p>The typical example is showing the male and female population by age bracket in a population pyramid.</p>
-</section>
-<section id="solution" class="level1">
-<h1>Solution</h1>
-<p>We can use <code>geom_rect</code> or <code>geom_tile</code> to create filled rectangle.</p>
-<ul>
-<li><code>geom_rect</code> takes the coordinates of the upper-left and lower-right corners of the rectangle.</li>
-<li><code>geom_fill</code> takes the coordiantes of the center of the rectangle, as well as it’s width and height.</li>
-</ul>
-</section>
-<section id="example-1" class="level1">
-<h1>Example 1</h1>
-<p>From the US Census we have data on the US population by age bracket and gender. We want to make a population pyramid out of this data. We start by loading the data and converting the data into long-form:</p>
-<div id="cell-2" class="cell" data-execution_count="96">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>pop <span class="op">=</span> (</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    pd.read_csv(<span class="st">'2022_acs_us_pop.csv'</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    [[<span class="st">'age_bracket_label'</span>, <span class="st">'pop_male'</span>, <span class="st">'pop_female'</span>]]</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    .rename(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        columns<span class="op">=</span>{<span class="st">'pop_male'</span>: <span class="st">'male'</span>, <span class="st">'pop_female'</span>: <span class="st">'female'</span>}</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    ).melt(</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'age_bracket_label'</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        var_name<span class="op">=</span><span class="st">'gender'</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        value_name<span class="op">=</span><span class="st">'population'</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>pop.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="96">
-<div>
-<div>
-
-
-<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">age_bracket_label</th>
-<th data-quarto-table-cell-role="th">gender</th>
-<th data-quarto-table-cell-role="th">population</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Under 5 years</td>
-<td>male</td>
-<td>9725644</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>5 to 9 years</td>
-<td>male</td>
-<td>10210019</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>10 to 14 years</td>
-<td>male</td>
-<td>10974635</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>15 to 19 years</td>
-<td>male</td>
-<td>11196816</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>20 to 24 years</td>
-<td>male</td>
-<td>11400730</td>
-</tr>
-</tbody>
-</table>
-
-</div>
-</div>
-</div>
-</div>
-<p>Before creating the population pyramid, let’s look at what we get from a using <code>geom_bar</code> (it is a stacked bar chart)</p>
-<div id="cell-4" class="cell" data-execution_count="97">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(x<span class="op">=</span><span class="st">'age_bracket_label'</span>, y<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_bar(stat<span class="op">=</span><span class="st">'identity'</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<div id="cell-5" class="cell" data-execution_count="123">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pop[<span class="st">'signed_pop'</span>] <span class="op">=</span> pop.<span class="bu">apply</span>(<span class="kw">lambda</span> row:  row.population <span class="cf">if</span> row.gender <span class="op">==</span> <span class="st">'male'</span>  <span class="cf">else</span> <span class="op">-</span>row.population, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We are ending one side of the rectangle on 0,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># and the other side on 'signed_pop', so the center is </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># half of the signed_pop</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>pop[<span class="st">'center'</span>] <span class="op">=</span> pop[<span class="st">'signed_pop'</span>] <span class="op">/</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-6" class="cell" data-execution_count="124">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>pop.age_bracket_label.unique().tolist()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="124">
-<pre><code>['Under 5 years',
- '5 to 9 years',
- '10 to 14 years',
- '15 to 19 years',
- '20 to 24 years',
- '25 to 29 years',
- '30 to 34 years',
- '35 to 39 years',
- '40 to 44 years',
- '45 to 49 years',
- '50 to 54 years',
- '55 to 59 years',
- '60 to 64 years',
- '65 to 69 years',
- '70 to 74 years',
- '75 to 79 years',
- '80 to 84 years',
- '85 years and over']</code></pre>
-</div>
-</div>
-<p>The <code>p9.geom_tile</code> takes an <code>x</code>, <code>y</code>, <code>width</code> and <code>height</code> to draw a filled rectangle. The <code>x</code> and <code>y</code> positions are the locations are the “center” of the rectangle, which is why we have calculated the <code>center</code> attribute.</p>
-<div id="cell-8" class="cell" data-execution_count="125">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(x<span class="op">=</span><span class="st">'age_bracket_label'</span>, y<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_tile(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">'center'</span>, width<span class="op">=</span><span class="dv">1</span>, height<span class="op">=</span><span class="st">'signed_pop'</span>))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We can rotate the text, but let’s swap the axes. We will also order the categories correctly.</p>
-<div id="cell-10" class="cell" data-execution_count="126">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(y<span class="op">=</span><span class="st">'age_bracket_label'</span>, x<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_tile(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'center'</span>, height<span class="op">=</span><span class="dv">1</span>, width<span class="op">=</span><span class="st">'signed_pop'</span>))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(y<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This gets the order the same as they appear in the dataframe</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (otherwise is alphabetical)</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_discrete(limits<span class="op">=</span>pop.age_bracket_label.unique().tolist())</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Let’s also format the population, so we are not showing the female population as negative</p>
-<div id="cell-12" class="cell" data-execution_count="128">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(pop, p9.aes(y<span class="op">=</span><span class="st">'age_bracket_label'</span>, x<span class="op">=</span><span class="st">'population'</span>, fill<span class="op">=</span><span class="st">'gender'</span>))</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_tile(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'center'</span>, height<span class="op">=</span><span class="fl">0.9</span>, width<span class="op">=</span><span class="st">'signed_pop'</span>), alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="st">"Population Pyramid (US 2022)"</span>, x<span class="op">=</span><span class="st">""</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This gets the order the same as they appear in the dataframe</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (otherwise is alphabetical)</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_discrete(limits<span class="op">=</span>pop.age_bracket_label.unique().tolist())</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_continuous(labels<span class="op">=</span><span class="kw">lambda</span> labs: [<span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(l<span class="op">/</span><span class="fl">1e6</span>)<span class="sc">:.0f}</span><span class="ss"> M"</span> <span class="cf">for</span> l <span class="kw">in</span> labs])</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_linedraw()</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(panel_border<span class="op">=</span>p9.element_blank())</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="dual_bar_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="example-2" class="level1">
-<h1>Example 2</h1>
-<p>This example is taken from the ggplot examples of Albert Rapp (the original post is called <a href="https://albert-rapp.de/posts/ggplot2-tips/22_diverging_bar_plot/22_diverging_bar_plot">“How to create diverging bar plots”</a>).</p>
+<p>We don’t want to annotate <em>all</em> data points, only one or two extraordinary ones.</p>
 
 
 </section>
