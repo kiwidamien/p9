@@ -195,12 +195,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>This makes a plot of the milk cow cost per head over year, but makes it a waterfall plot.</p>
+<p>This makes a plot of the milk cow cost per head over year, but makes it a waterfall plot. This is taken from the <a href="https://evamaerey.github.io/ggplot_flipbook/ggplot_flipbook_xaringan.html#356">ggplot flipbook</a>, who in turn took their data from the <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2019/2019-01-29/milkcow_facts.csv">#TidyTuesday project</a></p>
 <div id="cell-2" class="cell" data-execution_count="84">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>cows <span class="op">=</span> pd.read_csv(<span class="st">"milkcow_facts.csv"</span>).query(<span class="st">'year&gt;=2004'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Original data available at</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-01-29/milkcow_facts.csv</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>cows <span class="op">=</span> pd.read_csv(<span class="st">"milkcow_facts.csv"</span>).query(<span class="st">'year&gt;=2004'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-3" class="cell" data-execution_count="85">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cows.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -532,38 +534,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-7" class="cell" data-execution_count="88">
+<p>Now transform it into a waterfall chart:</p>
+<div id="cell-8" class="cell" data-execution_count="89">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(cows)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main waterfall</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.aes(xmin<span class="op">=</span><span class="st">'year-0.4'</span>, xmax<span class="op">=</span><span class="st">'year + 0.4'</span>, ymax<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>, ymin<span class="op">=</span><span class="st">'milk_cow_cost_per_animal_lag'</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(fill<span class="op">=</span><span class="st">'blue'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_continuous(breaks<span class="op">=</span>cows.year.tolist())</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_col(data<span class="op">=</span>cows[cows.year<span class="op">==</span><span class="dv">2004</span>], mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>), fill<span class="op">=</span><span class="st">'grey'</span>)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dashed lines between</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_segment(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> cows[cows.year <span class="op">&lt;</span> <span class="dv">2014</span>], </span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'year+0.4'</span>, xend<span class="op">=</span><span class="st">'year+0.6'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>, yend<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>), </span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"grey"</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw(base_family <span class="op">=</span> <span class="st">"Times"</span>) </span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The % annotations</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_text(</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>cows.dropna(),</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        mapping <span class="op">=</span> p9.aes(</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            y <span class="op">=</span> <span class="st">'milk_cow_cost_per_animal'</span>, </span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="st">'year'</span>, </span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> (cows.dropna().percent_change <span class="op">&gt;</span> <span class="dv">0</span>),</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>[<span class="ss">f'</span><span class="sc">{</span>p<span class="sc">:.0%}</span><span class="ss">'</span> <span class="cf">for</span> p <span class="kw">in</span> cows.dropna().percent_change]),  </span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        size <span class="op">=</span> <span class="dv">10</span>, </span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        nudge_y <span class="op">=</span> [<span class="dv">45</span> <span class="cf">if</span> p <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">45</span> <span class="cf">for</span> p <span class="kw">in</span> cows.dropna().percent_change],</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        show_legend <span class="op">=</span> <span class="va">False</span>)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_color_manual(values <span class="op">=</span> (<span class="st">"red"</span>, <span class="st">"grey"</span>))</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># titles</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">"Cost per Cow (USD)"</span>, title <span class="op">=</span> <span class="st">"Cost of milk cows in the United States"</span>, subtitle <span class="op">=</span> <span class="st">"Per animal cost, 2004-2014"</span>)</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.aes(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        xmin<span class="op">=</span><span class="st">'year-0.4'</span>, xmax<span class="op">=</span><span class="st">'year + 0.4'</span>, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        ymax<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>, ymin<span class="op">=</span><span class="st">'milk_cow_cost_per_animal_lag'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(fill<span class="op">=</span><span class="st">'blue'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_continuous(breaks<span class="op">=</span>cows.year.tolist())</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_col(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>cows[cows.year<span class="op">==</span><span class="dv">2004</span>], </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>), </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        fill<span class="op">=</span><span class="st">'grey'</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dashed lines between</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_segment(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> cows[cows.year <span class="op">&lt;</span> <span class="dv">2014</span>], </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'year+0.4'</span>, xend<span class="op">=</span><span class="st">'year+0.6'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>, yend<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>), </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"grey"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw(base_family <span class="op">=</span> <span class="st">"Times"</span>) </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The % annotations</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_text(</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>cows.dropna(),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        mapping <span class="op">=</span> p9.aes(</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            y <span class="op">=</span> <span class="st">'milk_cow_cost_per_animal'</span>, </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="st">'year'</span>, </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> (cows.dropna().percent_change <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>[<span class="ss">f'</span><span class="sc">{</span>p<span class="sc">:.0%}</span><span class="ss">'</span> <span class="cf">for</span> p <span class="kw">in</span> cows.dropna().percent_change]),  </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        size <span class="op">=</span> <span class="dv">10</span>, </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        nudge_y <span class="op">=</span> [<span class="dv">45</span> <span class="cf">if</span> p <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">45</span> <span class="cf">for</span> p <span class="kw">in</span> cows.dropna().percent_change],</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        show_legend <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_color_manual(values <span class="op">=</span> (<span class="st">"red"</span>, <span class="st">"grey"</span>))</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># titles</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">""</span>, </span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span><span class="st">"Cost per Cow (USD)"</span>, </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        title <span class="op">=</span> <span class="st">"Cost of milk cows in the United States"</span>, </span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        subtitle <span class="op">=</span> <span class="st">"Per animal cost, 2004-2014"</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>/Users/damienmartin/anaconda3/envs/blog/lib/python3.12/site-packages/plotnine/layer.py:364: PlotnineWarning: geom_rect : Removed 1 rows containing missing values.</code></pre>
 </div>
