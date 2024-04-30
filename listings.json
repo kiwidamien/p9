@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
       "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
@@ -16,6 +17,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
       "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
