@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Damien Martin">
-<meta name="dcterms.date" content="2024-04-29">
-<meta name="description" content="Showed how to shade a region on a plot">
+<meta name="dcterms.date" content="2024-05-01">
+<meta name="description" content="Translates an example of a waterfall chart from the ggplot flipbook">
 
-<title>p9 - Shading regions on a plot</title>
+<title>p9 - Making a waterfall chart</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,22 +60,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -107,35 +107,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -146,7 +117,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">p9</span>
     </a>
   </div>
@@ -157,7 +128,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../blog.html"> 
+    <a class="nav-link" href="../../../blog.html"> 
 <span class="menu-text">p9</span></a>
   </li>  
   <li class="nav-item compact">
@@ -176,16 +147,16 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Shading regions on a plot</h1>
+      <h1 class="title">Making a waterfall chart</h1>
                   <div>
         <div class="description">
-          Showed how to shade a region on a plot
+          Translates an example of a waterfall chart from the ggplot flipbook
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">data-vis</div>
                 <div class="quarto-category">plotnine</div>
-                <div class="quarto-category">snippet</div>
+                <div class="quarto-category">gallery</div>
               </div>
                   </div>
   </div>
@@ -203,7 +174,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 29, 2024</p>
+        <p class="date">May 1, 2024</p>
       </div>
     </div>
     
@@ -215,15 +186,7 @@ window.Quarto = {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -232,33 +195,18 @@ window.Quarto = {
 
 
 
-<section id="problem" class="level1">
-<h1>Problem</h1>
-<p>We want to shade a region on a plot. Note that <code>matplotlib</code> and <code>altair</code> can have annoyances about finding the “edges” of the range.</p>
-</section>
-<section id="solution" class="level1">
-<h1>Solution</h1>
-<ul>
-<li>Use <code>p9.geom_rect</code> with <code>p9.aes(xmin=..., xmax=..., ymin=..., ymax=...)</code> as its first argument</li>
-<li>Use the alpha argument to make the box semi-transparent</li>
-</ul>
-</section>
-<section id="example" class="level1">
-<h1>Example</h1>
-<p>We will make a normal distribution, with the negative region blocked out</p>
-<div id="cell-3" class="cell" data-execution_count="1">
+<p>This makes a plot of the milk cow cost per head over year, but makes it a waterfall plot. This is taken from the <a href="https://evamaerey.github.io/ggplot_flipbook/ggplot_flipbook_xaringan.html#356">ggplot flipbook</a>, who in turn took their data from the <a href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2019/2019-01-29/milkcow_facts.csv">#TidyTuesday project</a></p>
+<div id="cell-2" class="cell" data-execution_count="84">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Original data available at</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-01-29/milkcow_facts.csv</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>cows <span class="op">=</span> pd.read_csv(<span class="st">"milkcow_facts.csv"</span>).query(<span class="st">'year&gt;=2004'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-4" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x_values <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">100</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y_values <span class="op">=</span> scipy.stats.norm(<span class="dv">2</span>, <span class="dv">1</span>).pdf(x_values)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>shifted_gaussian_df <span class="op">=</span> pd.DataFrame({<span class="st">'x'</span>: x_values, <span class="st">'density'</span>: y_values})</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>shifted_gaussian_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div id="cell-3" class="cell" data-execution_count="85">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cows.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="85">
 <div>
 <div>
 
@@ -267,35 +215,89 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">x</th>
-<th data-quarto-table-cell-role="th">density</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">avg_milk_cow_number</th>
+<th data-quarto-table-cell-role="th">milk_per_cow</th>
+<th data-quarto-table-cell-role="th">milk_production_lbs</th>
+<th data-quarto-table-cell-role="th">avg_price_milk</th>
+<th data-quarto-table-cell-role="th">dairy_ration</th>
+<th data-quarto-table-cell-role="th">milk_feed_price_ratio</th>
+<th data-quarto-table-cell-role="th">milk_cow_cost_per_animal</th>
+<th data-quarto-table-cell-role="th">milk_volume_to_buy_cow_in_lbs</th>
+<th data-quarto-table-cell-role="th">alfalfa_hay_price</th>
+<th data-quarto-table-cell-role="th">slaughter_cow_price</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>-2.000000</td>
-<td>0.000134</td>
+<td data-quarto-table-cell-role="th">24</td>
+<td>2004.0</td>
+<td>9010000.0</td>
+<td>18960</td>
+<td>1.708320e+11</td>
+<td>0.161</td>
+<td>0.052007</td>
+<td>3.10</td>
+<td>1580</td>
+<td>9813.664596</td>
+<td>95.133333</td>
+<td>0.5266</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>-1.919192</td>
-<td>0.000184</td>
+<td data-quarto-table-cell-role="th">25</td>
+<td>2005.0</td>
+<td>9050000.0</td>
+<td>19550</td>
+<td>1.769310e+11</td>
+<td>0.151</td>
+<td>0.046825</td>
+<td>3.24</td>
+<td>1770</td>
+<td>11721.854305</td>
+<td>102.525000</td>
+<td>0.5394</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>-1.838384</td>
-<td>0.000252</td>
+<td data-quarto-table-cell-role="th">26</td>
+<td>2006.0</td>
+<td>9137000.0</td>
+<td>19895</td>
+<td>1.817820e+11</td>
+<td>0.129</td>
+<td>0.050371</td>
+<td>2.57</td>
+<td>1730</td>
+<td>13410.852713</td>
+<td>107.708333</td>
+<td>0.4908</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>-1.757576</td>
-<td>0.000343</td>
+<td data-quarto-table-cell-role="th">27</td>
+<td>2007.0</td>
+<td>9189000.0</td>
+<td>20204</td>
+<td>1.856540e+11</td>
+<td>0.191</td>
+<td>0.067958</td>
+<td>2.80</td>
+<td>1830</td>
+<td>9581.151832</td>
+<td>130.583333</td>
+<td>0.4951</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>-1.676768</td>
-<td>0.000463</td>
+<td data-quarto-table-cell-role="th">28</td>
+<td>2008.0</td>
+<td>9314000.0</td>
+<td>20397</td>
+<td>1.899780e+11</td>
+<td>0.183</td>
+<td>0.091663</td>
+<td>2.01</td>
+<td>1950</td>
+<td>10655.737705</td>
+<td>161.333333</td>
+<td>0.5144</td>
 </tr>
 </tbody>
 </table>
@@ -304,68 +306,291 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>Let’s start by just plotting the normal distribution:</p>
-<div id="cell-6" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(shifted_gaussian_df, p9.aes(x<span class="op">=</span><span class="st">'x'</span>, y<span class="op">=</span><span class="st">'density'</span>))</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
+<div id="cell-4" class="cell" data-execution_count="86">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cows[<span class="st">'milk_cow_cost_per_animal_lag'</span>] <span class="op">=</span> cows[<span class="st">'milk_cow_cost_per_animal'</span>].shift(<span class="dv">1</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>cows[<span class="st">'percent_change'</span>] <span class="op">=</span> cows[<span class="st">'milk_cow_cost_per_animal'</span>]<span class="op">/</span>cows[<span class="st">'milk_cow_cost_per_animal_lag'</span>] <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>cows</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="86">
 <div>
-<figure class="figure">
-<p><img src="making-boxes-on-ggplots_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
-</figure>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">avg_milk_cow_number</th>
+<th data-quarto-table-cell-role="th">milk_per_cow</th>
+<th data-quarto-table-cell-role="th">milk_production_lbs</th>
+<th data-quarto-table-cell-role="th">avg_price_milk</th>
+<th data-quarto-table-cell-role="th">dairy_ration</th>
+<th data-quarto-table-cell-role="th">milk_feed_price_ratio</th>
+<th data-quarto-table-cell-role="th">milk_cow_cost_per_animal</th>
+<th data-quarto-table-cell-role="th">milk_volume_to_buy_cow_in_lbs</th>
+<th data-quarto-table-cell-role="th">alfalfa_hay_price</th>
+<th data-quarto-table-cell-role="th">slaughter_cow_price</th>
+<th data-quarto-table-cell-role="th">milk_cow_cost_per_animal_lag</th>
+<th data-quarto-table-cell-role="th">percent_change</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">24</td>
+<td>2004.0</td>
+<td>9010000.0</td>
+<td>18960</td>
+<td>1.708320e+11</td>
+<td>0.161</td>
+<td>0.052007</td>
+<td>3.10</td>
+<td>1580</td>
+<td>9813.664596</td>
+<td>95.133333</td>
+<td>0.526600</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">25</td>
+<td>2005.0</td>
+<td>9050000.0</td>
+<td>19550</td>
+<td>1.769310e+11</td>
+<td>0.151</td>
+<td>0.046825</td>
+<td>3.24</td>
+<td>1770</td>
+<td>11721.854305</td>
+<td>102.525000</td>
+<td>0.539400</td>
+<td>1580.0</td>
+<td>0.120253</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">26</td>
+<td>2006.0</td>
+<td>9137000.0</td>
+<td>19895</td>
+<td>1.817820e+11</td>
+<td>0.129</td>
+<td>0.050371</td>
+<td>2.57</td>
+<td>1730</td>
+<td>13410.852713</td>
+<td>107.708333</td>
+<td>0.490800</td>
+<td>1770.0</td>
+<td>-0.022599</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">27</td>
+<td>2007.0</td>
+<td>9189000.0</td>
+<td>20204</td>
+<td>1.856540e+11</td>
+<td>0.191</td>
+<td>0.067958</td>
+<td>2.80</td>
+<td>1830</td>
+<td>9581.151832</td>
+<td>130.583333</td>
+<td>0.495100</td>
+<td>1730.0</td>
+<td>0.057803</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">28</td>
+<td>2008.0</td>
+<td>9314000.0</td>
+<td>20397</td>
+<td>1.899780e+11</td>
+<td>0.183</td>
+<td>0.091663</td>
+<td>2.01</td>
+<td>1950</td>
+<td>10655.737705</td>
+<td>161.333333</td>
+<td>0.514400</td>
+<td>1830.0</td>
+<td>0.065574</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">29</td>
+<td>2009.0</td>
+<td>9202000.0</td>
+<td>20561</td>
+<td>1.892020e+11</td>
+<td>0.128</td>
+<td>0.072685</td>
+<td>1.78</td>
+<td>1390</td>
+<td>10859.375000</td>
+<td>122.916667</td>
+<td>0.443767</td>
+<td>1950.0</td>
+<td>-0.287179</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">30</td>
+<td>2010.0</td>
+<td>9123000.0</td>
+<td>21142</td>
+<td>1.928770e+11</td>
+<td>0.163</td>
+<td>0.072030</td>
+<td>2.26</td>
+<td>1330</td>
+<td>8159.509202</td>
+<td>116.416667</td>
+<td>0.561000</td>
+<td>1390.0</td>
+<td>-0.043165</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">31</td>
+<td>2011.0</td>
+<td>9199000.0</td>
+<td>21334</td>
+<td>1.962550e+11</td>
+<td>0.201</td>
+<td>0.107560</td>
+<td>1.90</td>
+<td>1420</td>
+<td>7064.676617</td>
+<td>176.083333</td>
+<td>0.683000</td>
+<td>1330.0</td>
+<td>0.067669</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">32</td>
+<td>2012.0</td>
+<td>9237000.0</td>
+<td>21722</td>
+<td>2.006420e+11</td>
+<td>0.185</td>
+<td>0.121500</td>
+<td>1.52</td>
+<td>1430</td>
+<td>7729.729730</td>
+<td>206.083333</td>
+<td>0.777100</td>
+<td>1420.0</td>
+<td>0.007042</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">33</td>
+<td>2013.0</td>
+<td>9224000.0</td>
+<td>21816</td>
+<td>2.012310e+11</td>
+<td>0.201</td>
+<td>0.117092</td>
+<td>1.75</td>
+<td>1380</td>
+<td>6865.671642</td>
+<td>205.830000</td>
+<td>0.775600</td>
+<td>1430.0</td>
+<td>-0.034965</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">34</td>
+<td>2014.0</td>
+<td>9257000.0</td>
+<td>22259</td>
+<td>2.060540e+11</td>
+<td>0.240</td>
+<td>0.095100</td>
+<td>2.54</td>
+<td>1830</td>
+<td>7625.000000</td>
+<td>200.250000</td>
+<td>1.020400</td>
+<td>1380.0</td>
+<td>0.326087</td>
+</tr>
+</tbody>
+</table>
+
 </div>
 </div>
 </div>
-<p>Let’s shade the area of the plot with <span class="math inline">\(x &lt; 0\)</span></p>
-<div id="cell-8" class="cell" data-execution_count="5">
+</div>
+<p>Start with a simple barplot to visualize the data</p>
+<div id="cell-6" class="cell" data-execution_count="87">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(shifted_gaussian_df, p9.aes(x<span class="op">=</span><span class="st">'x'</span>, y<span class="op">=</span><span class="st">'density'</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(xmin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), xmax<span class="op">=</span><span class="dv">0</span>, ymin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), ymax<span class="op">=</span><span class="bu">float</span>(<span class="st">"inf"</span>)),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.005</span>, fill<span class="op">=</span><span class="st">'red'</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add some text as well</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.annotate(<span class="st">"text"</span>, x<span class="op">=-</span><span class="dv">1</span>, y<span class="op">=</span><span class="fl">0.35</span>, label<span class="op">=</span><span class="st">"Rejection zone"</span>, color<span class="op">=</span><span class="st">"blue"</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="st">"A gaussian distribution faking a decision process"</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(cows)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.aes(x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_bar(stat<span class="op">=</span><span class="st">'identity'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_continuous(breaks<span class="op">=</span>cows.year.tolist())</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="making-boxes-on-ggplots_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="gallery-waterfall_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>If you want the area under the curve instead, it looks a little different:</p>
-<div id="cell-10" class="cell" data-execution_count="10">
+<p>Now transform it into a waterfall chart:</p>
+<div id="cell-8" class="cell" data-execution_count="89">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(shifted_gaussian_df, p9.aes(x<span class="op">=</span><span class="st">'x'</span>, y<span class="op">=</span><span class="st">'density'</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_area(data<span class="op">=</span>shifted_gaussian_df[shifted_gaussian_df[<span class="st">'x'</span>] <span class="op">&gt;=</span> <span class="dv">0</span>], fill<span class="op">=</span><span class="st">"blue"</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line()</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(xmin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), xmax<span class="op">=</span><span class="dv">0</span>, ymin<span class="op">=</span><span class="bu">float</span>(<span class="st">"-inf"</span>), ymax<span class="op">=</span><span class="bu">float</span>(<span class="st">"inf"</span>)),</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.005</span>, fill<span class="op">=</span><span class="st">'red'</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add some text as well</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.annotate(<span class="st">"text"</span>, x<span class="op">=-</span><span class="dv">1</span>, y<span class="op">=</span><span class="fl">0.35</span>, label<span class="op">=</span><span class="st">"Rejection zone"</span>, color<span class="op">=</span><span class="st">"blue"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="st">"A gaussian distribution faking a decision process"</span>)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(cows)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Main waterfall</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.aes(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        xmin<span class="op">=</span><span class="st">'year-0.4'</span>, xmax<span class="op">=</span><span class="st">'year + 0.4'</span>, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        ymax<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>, ymin<span class="op">=</span><span class="st">'milk_cow_cost_per_animal_lag'</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(fill<span class="op">=</span><span class="st">'blue'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_continuous(breaks<span class="op">=</span>cows.year.tolist())</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_col(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>cows[cows.year<span class="op">==</span><span class="dv">2004</span>], </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'year'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>), </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        fill<span class="op">=</span><span class="st">'grey'</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Dashed lines between</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_segment(</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> cows[cows.year <span class="op">&lt;</span> <span class="dv">2014</span>], </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'year+0.4'</span>, xend<span class="op">=</span><span class="st">'year+0.6'</span>, y<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>, yend<span class="op">=</span><span class="st">'milk_cow_cost_per_animal'</span>), </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>        linetype <span class="op">=</span> <span class="st">"dashed"</span>, color <span class="op">=</span> <span class="st">"grey"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw(base_family <span class="op">=</span> <span class="st">"Times"</span>) </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># The % annotations</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_text(</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>cows.dropna(),</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        mapping <span class="op">=</span> p9.aes(</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            y <span class="op">=</span> <span class="st">'milk_cow_cost_per_animal'</span>, </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="st">'year'</span>, </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>            color <span class="op">=</span> (cows.dropna().percent_change <span class="op">&gt;</span> <span class="dv">0</span>),</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            label<span class="op">=</span>[<span class="ss">f'</span><span class="sc">{</span>p<span class="sc">:.0%}</span><span class="ss">'</span> <span class="cf">for</span> p <span class="kw">in</span> cows.dropna().percent_change]),  </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        size <span class="op">=</span> <span class="dv">10</span>, </span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        nudge_y <span class="op">=</span> [<span class="dv">45</span> <span class="cf">if</span> p <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">45</span> <span class="cf">for</span> p <span class="kw">in</span> cows.dropna().percent_change],</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>        show_legend <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_color_manual(values <span class="op">=</span> (<span class="st">"red"</span>, <span class="st">"grey"</span>))</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># titles</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        x<span class="op">=</span><span class="st">""</span>, </span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        y<span class="op">=</span><span class="st">"Cost per Cow (USD)"</span>, </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        title <span class="op">=</span> <span class="st">"Cost of milk cows in the United States"</span>, </span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        subtitle <span class="op">=</span> <span class="st">"Per animal cost, 2004-2014"</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/damienmartin/anaconda3/envs/blog/lib/python3.12/site-packages/plotnine/layer.py:364: PlotnineWarning: geom_rect : Removed 1 rows containing missing values.</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="making-boxes-on-ggplots_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="gallery-waterfall_files/figure-html/cell-6-output-2.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 
 
-</section>
 
 </main> <!-- /main -->
 <div>
