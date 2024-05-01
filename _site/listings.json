@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
       "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
@@ -17,6 +18,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
       "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
