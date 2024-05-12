@@ -2,12 +2,12 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/presto/dates.html",
       "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
       "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
-      "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
       "/posts/ggplot2-tips/making-percentage-labels.html",
       "/posts/ggplot2-tips/making-manual-error-bars.html",
@@ -20,11 +20,11 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
       "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
-      "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
       "/posts/ggplot2-tips/making-percentage-labels.html",
       "/posts/ggplot2-tips/making-manual-error-bars.html",
