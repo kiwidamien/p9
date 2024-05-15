@@ -1,8 +1,8 @@
 ---
-title: 'This is a dummy blog posts'
-date: '2022-06-01'
-categories: ['123', 'Second Tag']
-description: 'This is a test post. In this post, I try out different functionalities'
+title: 'Quick EDA settings hacks'
+date: '2024-05-01'
+categories: ['pandas', 'matplotlib', 'notebook', 'EDA']
+description: 'Settings that make notebooks easier to use, especially for EDA'
 execute: 
   message: false
   warning: false
@@ -10,18 +10,32 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Heading 1
+# Pandas
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam suscipit est nec dui eleifend, at dictum elit ullamcorper. Aliquam feugiat dictum bibendum. Praesent fermentum laoreet quam, cursus volutpat odio dapibus in. Fusce luctus porttitor vehicula. Donec ac tortor nisi. Donec at lectus tortor. Morbi tempor, nibh non euismod viverra, metus arcu aliquet elit, sed fringilla urna leo vel purus. 
+## Setting the maximum number of rows
 
-## Merriweather
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam suscipit est nec dui eleifend, at dictum elit ullamcorper. **Aliquam feugiat dictum bibendum.** Praesent fermentum laoreet quam, cursus volutpat odio dapibus in. [Fusce luctus](https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss) porttitor vehicula. Donec ac tortor nisi. Donec at lectus tortor. Morbi tempor, nibh non euismod viverra, metus arcu aliquet elit, sed fringilla urna leo vel purus.
-
-### 3 - Code
-
-This is `inline` code plus a small code chunk.
-
+```
+import pandas as pd 
+pd.set_option('display.min_rows', 500)
+pd.set_option('display.max_rows', 500)
+```
+Setting to `None` will also allow you to show all rows.
 
 
-### 3 - Tabsets
+I really like the ability to do this on a one-off basis too:
+```python
+from IPython.display import display 
+
+with pd.option_context('display.max_rows', 100, 'display.max_columns', 10):
+  display(df)
+```
+
+# Matplotlib
+
+## Retina display quality
+
+```python
+import matplotlib.pyplot as plt
+%matplotlib inline
+%config InlineBackend.figure_format='retina'
+```

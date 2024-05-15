@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Damien Martin">
-<meta name="dcterms.date" content="2024-04-29">
+<meta name="dcterms.date" content="2024-05-11">
 <meta name="description" content="Make a plot with confidence intervals, and infeasible regions shaded out">
 
 <title>p9 - Ensemble of Confidence Intervals</title>
@@ -200,7 +200,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 29, 2024</p>
+        <p class="date">May 11, 2024</p>
       </div>
     </div>
     
@@ -257,24 +257,29 @@ window.Quarto = {
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># that the value logically cannot be in the interval)</span></span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>entire_ci_infeasible <span class="op">=</span> (ci_lower <span class="op">&gt;</span> smallest).mean()</span>
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        pd.DataFrame({<span class="st">'lower'</span>: ci_lower, <span class="st">'upper'</span>: ci_upper, <span class="st">'smallest'</span>: smallest}).reset_index(), </span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        p9.aes(y<span class="op">=</span><span class="st">'index'</span>)</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_errorbarh(mapping<span class="op">=</span>p9.aes(xmin<span class="op">=</span><span class="st">'lower'</span>, xmax<span class="op">=</span><span class="st">'upper'</span>))</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'smallest'</span>), color<span class="op">=</span><span class="st">'red'</span>)</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span><span class="ss">f"Confidence Intervals for ETTF (True value = 10 s, sample size is </span><span class="sc">{</span>SAMPLE_SIZE<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_vline(xintercept<span class="op">=</span>THETA, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        axis_ticks<span class="op">=</span>p9.element_blank(),</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        panel_grid_major<span class="op">=</span>p9.element_blank(),</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        panel_border<span class="op">=</span>p9.element_blank(),</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_continuous(breaks<span class="op">=</span>[])</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(mapping<span class="op">=</span>p9.aes(xmax<span class="op">=</span><span class="bu">float</span>(<span class="st">'inf'</span>), xmin<span class="op">=</span><span class="st">'smallest'</span>, ymin<span class="op">=</span><span class="st">'index-0.5'</span>, ymax<span class="op">=</span><span class="st">'index+0.5'</span>), alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>plot_data <span class="op">=</span> pd.DataFrame({<span class="st">'lower'</span>: ci_lower, <span class="st">'upper'</span>: ci_upper, <span class="st">'smallest'</span>: smallest}).reset_index()</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>title <span class="op">=</span> <span class="ss">f"Confidence Intervals for ETTF (True value = 10 s, sample size is </span><span class="sc">{</span>SAMPLE_SIZE<span class="sc">}</span><span class="ss">)"</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        plot_data, </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>        p9.aes(y<span class="op">=</span><span class="st">'index'</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_errorbarh(mapping<span class="op">=</span>p9.aes(xmin<span class="op">=</span><span class="st">'lower'</span>, xmax<span class="op">=</span><span class="st">'upper'</span>))</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_point(mapping<span class="op">=</span>p9.aes(x<span class="op">=</span><span class="st">'smallest'</span>), color<span class="op">=</span><span class="st">'red'</span>)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(x<span class="op">=</span><span class="st">""</span>, y<span class="op">=</span><span class="st">""</span>, title<span class="op">=</span>title)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_vline(xintercept<span class="op">=</span>THETA, linetype<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        axis_ticks<span class="op">=</span>p9.element_blank(),</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        panel_grid_major<span class="op">=</span>p9.element_blank(),</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>        panel_border<span class="op">=</span>p9.element_blank(),</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_continuous(breaks<span class="op">=</span>[])</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_rect(</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(xmax<span class="op">=</span><span class="bu">float</span>(<span class="st">'inf'</span>), xmin<span class="op">=</span><span class="st">'smallest'</span>, ymin<span class="op">=</span><span class="st">'index-0.5'</span>, ymax<span class="op">=</span><span class="st">'index+0.5'</span>), </span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        alpha<span class="op">=</span><span class="fl">0.5</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
