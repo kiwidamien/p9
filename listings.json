@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/interview_questions/dice_rolls.html",
       "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/presto/dates.html",
       "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
