@@ -2,6 +2,9 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/making-plots-wider.html",
+      "/posts/ggplot2-tips/datetime-axes.html",
+      "/posts/python-tips/publish_python.html",
       "/posts/interview_questions/dice_rolls.html",
       "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/presto/dates.html",
@@ -19,8 +22,22 @@
     ]
   },
   {
+    "listing": "/python-series.html",
+    "items": [
+      "/posts/python-tips/publish_python.html"
+    ]
+  },
+  {
+    "listing": "/presto-series.html",
+    "items": [
+      "/posts/presto/dates.html"
+    ]
+  },
+  {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/making-plots-wider.html",
+      "/posts/ggplot2-tips/datetime-axes.html",
       "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
       "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
       "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",

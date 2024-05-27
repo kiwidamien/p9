@@ -19,5 +19,11 @@ title-block-banner: false
 ##### [ggplot2-series](ggplot-series.html)
 This series contains a great deal of tips, tricks and packages 
 that you can use to level up your ggplot game.
+
+##### [presto-series](presto-series.html)
+Lookup SQL syntax quirks.
+
+##### [python-series](python-series.html)
+Lookup pandas and python package management tricks.
 :::
 

@@ -213,6 +213,7 @@ window.Quarto = {
   <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a>
   <ul class="collapse">
   <li><a href="#wrinkle" id="toc-wrinkle" class="nav-link" data-scroll-target="#wrinkle">Wrinkle</a></li>
+  <li><a href="#going-one-step-deeper" id="toc-going-one-step-deeper" class="nav-link" data-scroll-target="#going-one-step-deeper">Going one step deeper</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -231,7 +232,7 @@ window.Quarto = {
 <p>You have a function rand7() that generates a random integer from 1 to 7. Use it to write a function rand5() that generates a random integer from 1 to 5.</p>
 <p>rand7() returns each integer with equal probability. rand5() must also return each integer with equal probability.</p>
 </blockquote>
-<p>They had a solution, but also had a callout that I thought was … misplaced.</p>
+<p>They had a solution, but also had a callout that I thought was interesting.</p>
 </section>
 <section id="solution" class="level1">
 <h1>Solution</h1>
@@ -272,7 +273,43 @@ window.Quarto = {
 <li>The expected number of runs is 125/119 ~ 1.05</li>
 </ul>
 <p>The expected number of calls to <code>rand5()</code> would be 1.05 x 3 = 3.15</p>
-<p>In general, letting - <span class="math inline">\(n\)</span> be the number of times <code>rand5()</code> is called - <span class="math inline">\(N=5^N\)</span> as the number of options - <span class="math inline">\(m = N mod 7\)</span> as the modulus We have a rejection probability of <code>m/N</code>, an acceptance probability per loop of <code>(N-m)/N</code>, and an expected number of loop executions of <code>N/(N-m)</code>. The expected number of calls to <code>rand5()</code> is <span class="math inline">\(n N / (N-m) \leq nN / (N - 6)\)</span>, as 6 is the worst case sceanario for the modulus.</p>
+<p>In general, letting - <span class="math inline">\(n\)</span> be the number of times <code>rand5()</code> is called - <span class="math inline">\(N=5^N\)</span> as the number of options - <span class="math inline">\(m = N \mod 7\)</span> as the modulus We have a rejection probability of <code>m/N</code>, an acceptance probability per loop of <code>(N-m)/N</code>, and an expected number of loop executions of <code>N/(N-m)</code>. The expected number of calls to <code>rand5()</code> is <span class="math inline">\(n N / (N-m) \leq nN / (N - 6)\)</span> as 6 is the worst case sceanario for the modulus.</p>
+<p>We can get a rough feel for how the number of calls to <code>rand5()</code> grows as you make each loop more efficent by calling more times in a loop (exchanging a lower rejection rate per loop for more work per loop). The tradeoff is roughly <code>n(1 + 6/N)</code>, from expanding the <span class="math inline">\(N/(N - 6) = 1/(1-6/N) = (1 + 6/N + \ldots)\)</span>.</p>
+<p>So the interview cake solution of only using two <code>rand5()</code> calls was correct:</p>
+<ul>
+<li>It yields an infinite worst case (but so does every solution)</li>
+<li>It yields a lower minumum number of calls (2), and a lower expected number of calls (2.4) than rolling three</li>
+<li>It yields a higher variance, though (not shown)</li>
+</ul>
+</section>
+<section id="going-one-step-deeper" class="level2">
+<h2 class="anchored" data-anchor-id="going-one-step-deeper">Going one step deeper</h2>
+<p>Let’s say that we <code>rand5()</code> really was the long poll in the tent, and we could only call it <code>n</code> times. What would be the probability of a timeout?</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>n dice</th>
+<th>P(loops &gt; 1)</th>
+<th>P(loops &gt; 2)</th>
+<th>P(loops &gt; 3)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2</td>
+<td>16.0%</td>
+<td>2.56%</td>
+<td>0.41%</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>4.8%</td>
+<td>0.23%</td>
+<td>0.011%</td>
+</tr>
+</tbody>
+</table>
+<p>So if we had time to roll up to 6 die, we could do 3 loops of 2 dice (and have a failure rate of 0.41%), or up to two loops of a 3 roll (with a 0.23% failure rate). If we did <span class="math inline">\(n=6\)</span>, there would only be a 0.0064% failure rate (cut a lot more guaranteed work per roll).</p>
 
 
 </section>
