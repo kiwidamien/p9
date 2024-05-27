@@ -5,12 +5,16 @@
     <lastmod>2024-04-28T16:22:47.928Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/index.html</loc>
-    <lastmod>2024-04-27T22:29:05.755Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/python-series.html</loc>
+    <lastmod>2024-05-27T19:55:57.886Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
+    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/interview_questions/dice_rolls.html</loc>
-    <lastmod>2024-05-22T21:52:41.521Z</lastmod>
+    <lastmod>2024-05-22T22:30:27.599Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/composing/composing-plots.html</loc>
@@ -21,12 +25,16 @@
     <lastmod>2024-04-30T21:26:10.955Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-boxes-on-ggplots.html</loc>
-    <lastmod>2024-04-30T23:30:26.802Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/datetime-axes.html</loc>
+    <lastmod>2024-05-27T23:01:56.291Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html</loc>
-    <lastmod>2024-05-12T04:47:00.794Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-categorical-variables.html</loc>
+    <lastmod>2024-04-29T22:54:27.932Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-plots-wider.html</loc>
+    <lastmod>2024-05-27T22:57:45.101Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/annotating-a-single-point.html</loc>
@@ -37,6 +45,10 @@
     <lastmod>2024-05-15T18:21:41.248Z</lastmod>
   </url>
   <url>
+    <loc>https://kiwidamien.github.io/p9/presto-series.html</loc>
+    <lastmod>2024-05-27T19:57:08.857Z</lastmod>
+  </url>
+  <url>
     <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
     <lastmod>2024-05-07T18:00:29.331Z</lastmod>
   </url>
@@ -45,8 +57,12 @@
     <lastmod>2024-04-30T23:27:27.149Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-categorical-variables.html</loc>
-    <lastmod>2024-04-29T22:54:27.932Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html</loc>
+    <lastmod>2024-05-12T04:47:00.794Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-boxes-on-ggplots.html</loc>
+    <lastmod>2024-04-30T23:30:26.802Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-percentage-labels.html</loc>
@@ -63,6 +79,10 @@
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
     <lastmod>2024-04-27T22:29:05.757Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/index.html</loc>
+    <lastmod>2024-04-27T22:29:05.755Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/ggplot-series.html</loc>
