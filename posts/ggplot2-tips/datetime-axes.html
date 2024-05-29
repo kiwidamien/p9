@@ -191,7 +191,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
-  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a></li>
+  <li><a href="#solutions" id="toc-solutions" class="nav-link" data-scroll-target="#solutions">Solutions</a>
+  <ul class="collapse">
+  <li><a href="#desired-attribution" id="toc-desired-attribution" class="nav-link" data-scroll-target="#desired-attribution">Desired attribution:</a></li>
+  </ul></li>
   <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
   <li><a href="#techniques" id="toc-techniques" class="nav-link" data-scroll-target="#techniques">Techniques</a>
   <ul class="collapse">
@@ -223,11 +226,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>make plot wider</li>
 </ul>
 <p>Andrew Heiss has a <a href="https://www.andrewheiss.com/blog/2022/06/23/long-labels-ggplot/">blog post</a> for long labels in <code>gg-plot</code> in R.</p>
+<p>Note that the <code>dodge</code> solution does not appear to be ported into <code>plotnine</code> from <code>ggplot</code>.</p>
+<section id="desired-attribution" class="level3">
+<h3 class="anchored" data-anchor-id="desired-attribution">Desired attribution:</h3>
+<ul>
+<li>Heiss, Andrew. 2022. “Quick and Easy Ways to Deal with Long Labels in Ggplot2.” June 23, 2022. https://doi.org/10.59350/x7xtj-3dh31.</li>
+</ul>
+</section>
 </section>
 <section id="setup" class="level1">
 <h1>Setup</h1>
 <p>We start by grabbing some data about the daily highs and lows in Seattle, and making a default plot</p>
-<div id="cell-3" class="cell" data-execution_count="40">
+<div id="cell-3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -238,7 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>weather[<span class="st">"RAIN"</span>] <span class="op">=</span> weather[<span class="st">"RAIN"</span>] <span class="op">==</span> <span class="st">"TRUE"</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>weather.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="40">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 <div>
 
@@ -302,7 +312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-4" class="cell" data-execution_count="41">
+<div id="cell-4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(weather, p9.aes(x<span class="op">=</span><span class="st">"DATE"</span>)) </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">"TMAX"</span>))</span>
@@ -317,7 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The shear volume of data is going to make this difficult, as well as the difficulty with dates. Let’s use daily data, but over the most recent two years in the dataset. This gets us to our starting point.</p>
-<div id="cell-6" class="cell" data-execution_count="42">
+<div id="cell-6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>weather_recent <span class="op">=</span> weather[weather[<span class="st">"DATE"</span>].dt.year <span class="op">&gt;=</span> <span class="dv">2015</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -346,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Use <code>p9.theme(axis_text_x=p9.element_text(angle=xx))</code></li>
 </ul>
-<div id="cell-9" class="cell" data-execution_count="50">
+<div id="cell-9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(weather_recent, p9.aes(x<span class="op">=</span><span class="st">"DATE"</span>)) </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">"TMAX"</span>), color<span class="op">=</span><span class="st">"red"</span>)</span>
@@ -376,7 +386,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>date_format_string</code> defaults to ISO standard: <code>"%Y-%m-%d"</code></li>
 </ul></li>
 </ul>
-<div id="cell-11" class="cell" data-execution_count="83">
+<div id="cell-11" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(weather_recent, p9.aes(x<span class="op">=</span><span class="st">"DATE"</span>)) </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">"TMAX"</span>), color<span class="op">=</span><span class="st">"red"</span>)</span>
@@ -406,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Can use a <code>lambda</code> to take the Timestamp object, and transform it to a string</li>
 </ul>
 <p>Here is a way we can do the previous version (setting <code>date_format</code> to <code>"%Y-%m"</code>).</p>
-<div id="cell-13" class="cell" data-execution_count="84">
+<div id="cell-13" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(weather_recent, p9.aes(x<span class="op">=</span><span class="st">"DATE"</span>)) </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">"TMAX"</span>), color<span class="op">=</span><span class="st">"red"</span>)</span>
@@ -428,7 +438,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Let’s do a different version, which only shows the year in January</p>
-<div id="cell-15" class="cell" data-execution_count="89">
+<div id="cell-15" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>label_func <span class="op">=</span> <span class="kw">lambda</span> d: [date.strftime(<span class="st">"%Y"</span>) <span class="cf">if</span> date.month<span class="op">==</span><span class="dv">1</span> <span class="cf">else</span> date.strftime(<span class="st">"%m"</span>) <span class="cf">for</span> date <span class="kw">in</span> d]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -452,7 +462,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Even better:</p>
-<div id="cell-17" class="cell" data-execution_count="100">
+<div id="cell-17" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>label_func <span class="op">=</span> <span class="kw">lambda</span> d: [date.strftime(<span class="st">"%Y</span><span class="ch">\n</span><span class="st">%b"</span>) <span class="cf">if</span> date.month<span class="op">==</span><span class="dv">1</span> <span class="cf">else</span> date.strftime(<span class="st">"%b"</span>) <span class="cf">for</span> date <span class="kw">in</span> d]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -481,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Use the <code>figure_size=(h, w)</code> argument in <code>p9.theme</code></li>
 </ul>
-<div id="cell-19" class="cell" data-execution_count="93">
+<div id="cell-19" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(weather_recent, p9.aes(x<span class="op">=</span><span class="st">"DATE"</span>)) </span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">"TMAX"</span>), color<span class="op">=</span><span class="st">"red"</span>)</span>

@@ -187,7 +187,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#common-date-problems" id="toc-common-date-problems" class="nav-link active" data-scroll-target="#common-date-problems">Common date problems</a></li>
+  <li><a href="#common-date-problem-format-problems" id="toc-common-date-problem-format-problems" class="nav-link active" data-scroll-target="#common-date-problem-format-problems">Common date problem format problems</a></li>
+  <li><a href="#create-a-date-spine" id="toc-create-a-date-spine" class="nav-link" data-scroll-target="#create-a-date-spine">Create a date spine</a></li>
   </ul>
 </nav>
     </div>
@@ -198,13 +199,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="common-date-problems" class="level1">
-<h1>Common date problems</h1>
+<section id="common-date-problem-format-problems" class="level1">
+<h1>Common date problem format problems</h1>
 <p>Convert a string to a datetime object</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_PARSE(<span class="st">'2020-06-10'</span>, <span class="st">'%Y-%m-%d'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Convert one date format to another</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_FORMAT(DATE_PARSE(<span class="st">'2020-06-10'</span>, <span class="st">'%Y-%m-%d'</span>), <span class="st">'%Y%m%d'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Add a day</p>
+</section>
+<section id="create-a-date-spine" class="level1">
+<h1>Create a date spine</h1>
+<p>Want to do weekly smoothing, but worried that some days might be missing from the date range? Here is a way to generate a date range that you can left join to.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> UNNEST(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">SEQUENCE</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            FROM_ISO8601_DATE(<span class="st">'2010-01-20'</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            FROM_ISO8601_DATE(<span class="st">'2010-01-24'</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="dt">INTERVAL</span> <span class="st">'1'</span> <span class="dt">DAY</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> <span class="kw">AS</span> t1(date_array)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
