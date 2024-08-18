@@ -2,6 +2,8 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/gnattt_charts.html",
+      "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/ggplot2-tips/making-plots-wider.html",
       "/posts/ggplot2-tips/datetime-axes.html",
       "/posts/python-tips/publish_python.html",
@@ -11,7 +13,7 @@
       "/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html",
       "/posts/ggplot2-tips/waterfall/gallery-waterfall.html",
       "/posts/ggplot2-tips/annotating-a-single-point.html",
-      "/posts/new_blog_post/post.html",
+      "/posts/pandas/post.html",
       "/posts/ggplot2-tips/dropping-categories.html",
       "/posts/ggplot2-tips/composing/composing-plots.html",
       "/posts/ggplot2-tips/making-boxes-on-ggplots.html",
@@ -23,20 +25,9 @@
     ]
   },
   {
-    "listing": "/python-series.html",
-    "items": [
-      "/posts/python-tips/publish_python.html"
-    ]
-  },
-  {
-    "listing": "/presto-series.html",
-    "items": [
-      "/posts/presto/dates.html"
-    ]
-  },
-  {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/gnattt_charts.html",
       "/posts/ggplot2-tips/making-plots-wider.html",
       "/posts/ggplot2-tips/datetime-axes.html",
       "/posts/ggplot2-tips/gallery/error_bars_with_shaded_region.html",
@@ -50,6 +41,25 @@
       "/posts/ggplot2-tips/making-manual-error-bars.html",
       "/posts/ggplot2-tips/dual_bar/dual_bar.html",
       "/posts/ggplot2-tips/making-categorical-variables.html"
+    ]
+  },
+  {
+    "listing": "/presto-series.html",
+    "items": [
+      "/posts/presto/dates.html"
+    ]
+  },
+  {
+    "listing": "/python-series.html",
+    "items": [
+      "/posts/python-tips/publish_python.html"
+    ]
+  },
+  {
+    "listing": "/pandas-series.html",
+    "items": [
+      "/posts/pandas/apply_across_multiple_columns.html",
+      "/posts/pandas/post.html"
     ]
   }
 ]
