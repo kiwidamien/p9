@@ -1,7 +1,7 @@
 ---
-title: "Series: python and pandas tips"
+title: "Series: Pandas tips"
 listing:
-  contents: posts/python-tips
+  contents: posts/pandas
   sort: "date desc"
   type: default
   categories: false
