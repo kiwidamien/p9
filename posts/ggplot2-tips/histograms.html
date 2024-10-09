@@ -198,6 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#eliminate-stacking-solution-1-faceting" id="toc-eliminate-stacking-solution-1-faceting" class="nav-link" data-scroll-target="#eliminate-stacking-solution-1-faceting">Eliminate stacking: solution 1 – faceting</a></li>
   <li><a href="#eliminate-stacking-solution-2-overlay" id="toc-eliminate-stacking-solution-2-overlay" class="nav-link" data-scroll-target="#eliminate-stacking-solution-2-overlay">Eliminate stacking: solution 2 – overlay</a></li>
   <li><a href="#making-relative-histograms" id="toc-making-relative-histograms" class="nav-link" data-scroll-target="#making-relative-histograms">Making relative histograms</a></li>
+  <li><a href="#putting-counts-above-the-bars" id="toc-putting-counts-above-the-bars" class="nav-link" data-scroll-target="#putting-counts-above-the-bars">Putting counts above the bars</a></li>
   <li><a href="#building-histograms-with-pre-collected-data" id="toc-building-histograms-with-pre-collected-data" class="nav-link" data-scroll-target="#building-histograms-with-pre-collected-data">Building histograms with pre-collected data</a></li>
   </ul></li>
   </ul>
@@ -228,6 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The default is <code>position="stack"</code>. If you only have one group, there is no difference between <code>"identity"</code> and <code>"stack"</code>.</li>
 <li>You can also use <code>position="fill"</code>. This scales each bar to 100%, and divides up the histogram between the different groups. This option is only informative if you have multiple groups.</li>
 </ul></li>
+<li>Use <code>stat_bin</code> to access statistics calculated in the histogram (e.g.&nbsp;for use with placing labels on the graph).</li>
 <li>If you have counts already, you cannot use <code>geom_histogram</code>. Instead, use <code>p9.ggplot(data, p9.aes(x='x', y='count_column')) + p9.geom_bar(stat="identity")</code></li>
 </ul>
 <p>There isn’t a great place for this in the plotnine or ggplot documentation. A good start would be in the ggplot book <a href="https://ggplot2-book.org/layers.html#sec-geom">here</a></p>
@@ -348,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(penguins.dropna(), p9.aes(x<span class="op">=</span><span class="st">'body_mass_g'</span>, fill<span class="op">=</span><span class="st">'sex'</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_histogram(binwidth<span class="op">=</span><span class="dv">200</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(title<span class="op">=</span><span class="st">'Distribution of penguin weights'</span>, subtitle<span class="op">=</span><span class="st">"Is this stacked or overlayed?"</span>, x<span class="op">=</span><span class="st">'mass (g)'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(title<span class="op">=</span><span class="st">'Distribution of penguin weights'</span>, subtitle<span class="op">=</span><span class="st">"Is this stacked or overlayed? (Answer: they are stacked!)"</span>, x<span class="op">=</span><span class="st">'mass (g)'</span>)</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -486,22 +488,57 @@ Name: count, dtype: int64</code></pre>
 </div>
 </div>
 </section>
+<section id="putting-counts-above-the-bars" class="level2">
+<h2 class="anchored" data-anchor-id="putting-counts-above-the-bars">Putting counts above the bars</h2>
+<p>This is tricker than regular labels, because we are trying to access the result of a computation (if we already have the counts, we could use <code>geom_label</code> to add them automatically). Below is a way of adding when using the identity position using <code>stat_bin</code>. Example inspired from <a href="https://stackoverflow.com/questions/24198896/get-values-and-positions-to-label-a-ggplot-histogram#:~:text=ggplot%20%28csub%2Caes%20%28x%20%3D%20Anomaly10y%29%29%20%2B%20geom_histogram%20%28%29,original%20data%2C%20but%20generated%20by%20the%20geom_histogram%20function">stack overflow</a>.</p>
+<div id="cell-33" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(penguins.dropna(), p9.aes(x<span class="op">=</span><span class="st">'body_mass_g'</span>, fill<span class="op">=</span><span class="st">"species"</span>))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_histogram(binwidth<span class="op">=</span><span class="dv">200</span>, alpha<span class="op">=</span><span class="fl">0.5</span>, position<span class="op">=</span><span class="st">"identity"</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(title<span class="op">=</span><span class="st">'Distribution of penguin weights'</span>, subtitle<span class="op">=</span><span class="st">"Count graph"</span>, x<span class="op">=</span><span class="st">'mass (g)'</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.stat_bin(binwidth<span class="op">=</span><span class="dv">200</span>, geom<span class="op">=</span><span class="st">"text"</span>, mapping<span class="op">=</span>p9.aes(label<span class="op">=</span><span class="st">"..count.."</span>, color<span class="op">=</span><span class="st">'species'</span>), position<span class="op">=</span>p9.position_identity(), nudge_y<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="histograms_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If we have the slightly simpler use-case of only one species, the <code>position_stack</code> provides a slightly nicer interface. Note that <code>vjust</code> is as a fraction of the bar height (so 1 places right on top of the bar). This defaults at 0.5 (inside the bar). You can still use <code>nudge_y</code> if you want the values to be a constant offset upwards.</p>
+<div id="cell-35" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(penguins.dropna(), p9.aes(x<span class="op">=</span><span class="st">'body_mass_g'</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_histogram(binwidth<span class="op">=</span><span class="dv">200</span>, alpha<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.labs(title<span class="op">=</span><span class="st">'Distribution of penguin weights'</span>, subtitle<span class="op">=</span><span class="st">"Count graph"</span>, x<span class="op">=</span><span class="st">'mass (g)'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.stat_bin(binwidth<span class="op">=</span><span class="dv">200</span>, geom<span class="op">=</span><span class="st">"text"</span>, mapping<span class="op">=</span>p9.aes(label<span class="op">=</span><span class="st">"..count.."</span>), position<span class="op">=</span>p9.position_stack(vjust<span class="op">=</span><span class="fl">1.1</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="histograms_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 <section id="building-histograms-with-pre-collected-data" class="level2">
 <h2 class="anchored" data-anchor-id="building-histograms-with-pre-collected-data">Building histograms with pre-collected data</h2>
 <p>We can imagine that we pull data already binned from some external source (e.g.&nbsp;a database), and we want to plot that, as we only need the summary statistics</p>
-<div id="cell-33" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>prebinned <span class="op">=</span> ( </span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    penguins</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    .assign(mass_bin<span class="op">=</span><span class="kw">lambda</span> x: x.body_mass_g<span class="op">//</span><span class="dv">100</span>)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    .assign(individuals<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'mass_bin'</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'individuals'</span>]</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    .count()</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># our simulation of what we pull</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>prebinned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
+<div id="cell-38" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>prebinned <span class="op">=</span> ( </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    penguins</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    .assign(mass_bin<span class="op">=</span><span class="kw">lambda</span> x: x.body_mass_g<span class="op">//</span><span class="dv">100</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    .assign(individuals<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'mass_bin'</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'individuals'</span>]</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    .count()</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    .reset_index()</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># our simulation of what we pull</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>prebinned.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 <div>
 
@@ -540,156 +577,6 @@ Name: count, dtype: int64</code></pre>
 <td>31.0</td>
 <td>7</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>32.0</td>
-<td>11</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>33.0</td>
-<td>16</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>34.0</td>
-<td>21</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">8</td>
-<td>35.0</td>
-<td>19</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">9</td>
-<td>36.0</td>
-<td>16</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">10</td>
-<td>37.0</td>
-<td>23</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">11</td>
-<td>38.0</td>
-<td>15</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">12</td>
-<td>39.0</td>
-<td>21</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">13</td>
-<td>40.0</td>
-<td>12</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">14</td>
-<td>41.0</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">15</td>
-<td>42.0</td>
-<td>11</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">16</td>
-<td>43.0</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">17</td>
-<td>44.0</td>
-<td>14</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">18</td>
-<td>45.0</td>
-<td>6</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">19</td>
-<td>46.0</td>
-<td>13</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">20</td>
-<td>47.0</td>
-<td>15</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">21</td>
-<td>48.0</td>
-<td>10</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">22</td>
-<td>49.0</td>
-<td>7</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">23</td>
-<td>50.0</td>
-<td>9</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">24</td>
-<td>51.0</td>
-<td>5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">25</td>
-<td>52.0</td>
-<td>7</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">26</td>
-<td>53.0</td>
-<td>7</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">27</td>
-<td>54.0</td>
-<td>6</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">28</td>
-<td>55.0</td>
-<td>11</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">29</td>
-<td>56.0</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">30</td>
-<td>57.0</td>
-<td>6</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">31</td>
-<td>58.0</td>
-<td>5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">32</td>
-<td>59.0</td>
-<td>2</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">33</td>
-<td>60.0</td>
-<td>3</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">34</td>
-<td>63.0</td>
-<td>1</td>
-</tr>
 </tbody>
 </table>
 
@@ -697,29 +584,29 @@ Name: count, dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="cell-35" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(prebinned, p9.aes(x<span class="op">=</span><span class="st">'mass_bin'</span>))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">'individuals'</span>))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-40" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(prebinned, p9.aes(x<span class="op">=</span><span class="st">'mass_bin'</span>))</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_line(mapping<span class="op">=</span>p9.aes(y<span class="op">=</span><span class="st">'individuals'</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="histograms_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="histograms_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>We can turn this into a bar chart / histogram in the following way:</p>
-<div id="cell-37" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(prebinned, p9.aes(x<span class="op">=</span><span class="st">'mass_bin'</span>, y<span class="op">=</span><span class="st">'individuals'</span>))</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_bar(stat<span class="op">=</span><span class="st">"identity"</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-42" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    p9.ggplot(prebinned, p9.aes(x<span class="op">=</span><span class="st">'mass_bin'</span>, y<span class="op">=</span><span class="st">'individuals'</span>))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_bar(stat<span class="op">=</span><span class="st">"identity"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="histograms_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="histograms_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
