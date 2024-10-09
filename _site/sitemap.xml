@@ -13,8 +13,12 @@
     <lastmod>2024-04-27T22:29:05.755Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/pandas/post.html</loc>
-    <lastmod>2024-07-03T16:25:53.234Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/apply_across_multiple_columns.html</loc>
+    <lastmod>2024-07-08T17:25:14.032Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/stats_models_regression.html</loc>
+    <lastmod>2024-09-30T02:51:53.005Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
@@ -53,12 +57,16 @@
     <lastmod>2024-04-30T23:37:24.489Z</lastmod>
   </url>
   <url>
+    <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
+    <lastmod>2024-10-09T17:57:51.430Z</lastmod>
+  </url>
+  <url>
     <loc>https://kiwidamien.github.io/p9/presto-series.html</loc>
     <lastmod>2024-05-27T19:57:08.857Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
-    <lastmod>2024-05-29T18:14:39.450Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/histograms.html</loc>
+    <lastmod>2024-10-09T18:01:42.254Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/waterfall/gallery-waterfall.html</loc>
@@ -66,7 +74,7 @@
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/gallery/gallery_annotated_area.html</loc>
-    <lastmod>2024-08-20T20:58:56.228Z</lastmod>
+    <lastmod>2024-08-20T21:09:24.024Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-categorical-variables.html</loc>
@@ -97,8 +105,12 @@
     <lastmod>2024-05-27T19:54:22.526Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/pandas/apply_across_multiple_columns.html</loc>
-    <lastmod>2024-07-08T17:25:14.032Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/post.html</loc>
+    <lastmod>2024-07-03T16:25:53.234Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/grouper.html</loc>
+    <lastmod>2024-10-09T16:37:14.899Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/python-series.html</loc>

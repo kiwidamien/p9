@@ -189,6 +189,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#common-date-problem-format-problems" id="toc-common-date-problem-format-problems" class="nav-link active" data-scroll-target="#common-date-problem-format-problems">Common date problem format problems</a></li>
   <li><a href="#create-a-date-spine" id="toc-create-a-date-spine" class="nav-link" data-scroll-target="#create-a-date-spine">Create a date spine</a></li>
+  <li><a href="#date-differences" id="toc-date-differences" class="nav-link" data-scroll-target="#date-differences">Date Differences</a></li>
   </ul>
 </nav>
     </div>
@@ -219,6 +220,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        )</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> <span class="kw">AS</span> t1(date_array)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="date-differences" class="level1">
+<h1>Date Differences</h1>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_DIFF(<span class="st">'day'</span>, <span class="dt">DATE</span>(<span class="st">'2024-09-16'</span>), <span class="dt">DATE</span>(<span class="st">'2024-09-20'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This returns <code>4</code>. Things that can catch you:</p>
+<ul>
+<li>Has to be <code>day</code> (not <code>days</code>) for the unit</li>
+<li>The earlier date goes first (unlike subtraction, where we would start with the later date)</li>
+</ul>
 
 
 </section>
