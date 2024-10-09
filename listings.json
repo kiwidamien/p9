@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/histograms.html",
       "/posts/pandas/stats_models_regression.html",
       "/posts/pandas/grouper.html",
       "/posts/ggplot2-tips/gnattt_charts.html",
@@ -30,6 +31,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/histograms.html",
       "/posts/ggplot2-tips/gnattt_charts.html",
       "/posts/ggplot2-tips/making-plots-wider.html",
       "/posts/ggplot2-tips/datetime-axes.html",
