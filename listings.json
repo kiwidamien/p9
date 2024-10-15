@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/python-tips/timing_imports.html",
       "/posts/ggplot2-tips/histograms.html",
       "/posts/pandas/stats_models_regression.html",
       "/posts/pandas/grouper.html",
@@ -58,6 +59,7 @@
   {
     "listing": "/python-series.html",
     "items": [
+      "/posts/python-tips/timing_imports.html",
       "/posts/python-tips/publish_python.html"
     ]
   },
