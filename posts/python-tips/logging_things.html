@@ -103,6 +103,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -192,7 +195,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#i-just-want-something-that-works-for-simple-apps" id="toc-i-just-want-something-that-works-for-simple-apps" class="nav-link" data-scroll-target="#i-just-want-something-that-works-for-simple-apps">I just want something that works for simple apps</a></li>
   <li><a href="#the-better-approach" id="toc-the-better-approach" class="nav-link" data-scroll-target="#the-better-approach">The better approach</a></li>
   </ul></li>
-  <li><a href="#understanding-logging" id="toc-understanding-logging" class="nav-link" data-scroll-target="#understanding-logging">Understanding Logging</a></li>
+  <li><a href="#understanding-logging" id="toc-understanding-logging" class="nav-link" data-scroll-target="#understanding-logging">Understanding Logging</a>
+  <ul class="collapse">
+  <li><a href="#a-single-logger" id="toc-a-single-logger" class="nav-link" data-scroll-target="#a-single-logger">A single logger</a></li>
+  <li><a href="#the-logging-tree" id="toc-the-logging-tree" class="nav-link" data-scroll-target="#the-logging-tree">The logging tree</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -319,6 +326,8 @@ INFO:example:three</code></pre>
 <section id="understanding-logging" class="level1">
 <h1>Understanding Logging</h1>
 <p>James Murphy (of mCoding) does an excellent job here of talking about what a logger is and now it works. This is very much inspired by his presentation of it in <a href="https://youtu.be/9L77QExPmI0?si=ie9vzv1tq4LR8xGR&amp;t=163">this video</a></p>
+<section id="a-single-logger" class="level2">
+<h2 class="anchored" data-anchor-id="a-single-logger">A single logger</h2>
 <p>Here are the basic parts of logging:</p>
 <ul>
 <li><strong>logger</strong>: The is the the thing you make when calling <code>my_logger = getLogger("my_awesome_logger")</code>. The logger is responsible for creating LogRecords, which is a data structure containing the information we want to log. It does this with a variety of methods: <code>my_logger.debug("message")</code> creates a LogRecord with level DEBUG, etc.
@@ -339,33 +348,12 @@ INFO:example:three</code></pre>
 </ul></li>
 </ul>
 <p>Here is a graphical representation of a single logger:</p>
-<pre class="mermaid"><code>block-beta
-columns 3
-
-LEVEL:3
-FILTER:3
-HANDLERS:3
-block:group1:1
-  columns 1
-  H1L["Handler1 Level"]
-  H1FLT["Handler1 Filter"]
-  H1FOR["Handler1 Formatter"]
-  H1SINK["Handler1 Sink"]
-end
-block:group2:1
-  columns 1
-  H2L["Handler2 Level"]
-  H2FLT["Handler2 Filter"]
-  H2FOR["Handler2 Formatter"]
-  H2SINK["Handler2 Sink"]
-end
-block:group3:1
-  columns 1
-  H3L["..."]
-  H3FLT["..."]
-  H3FOR["..."]
-  H3SINK["..."]
-end</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="logger.png" class="img-fluid figure-img"></p>
+<figcaption>Structure of a Logger (mCoding inspired)</figcaption>
+</figure>
+</div>
 <p>When you call <code>my_logger.info("my message")</code>, here is what happens:</p>
 <ol type="1">
 <li>The logger first checks it’s log level. If it is INFO or lower, then the logger creates the log record. If the logger’s level is INFO or higher, we don’t even make the record.</li>
@@ -383,8 +371,49 @@ end</code></pre>
 <li>If <code>my_logger</code> doesn’t reject the LogRecord, we do this step after all the handlers for <code>my_logger</code> – even if every handler for <code>my_logger</code> rejected the message.</li>
 </ul></li>
 </ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Here are a couple of “gotchas”: - If you have a <em>handler</em> with a level of DEBUG, but the logger has a higer level (e.g.&nbsp;INFO), you won’t see any DEBUG messages. This is because the logger is dropping the messages before the handler gets a chance to see it. - If you have a logger that drops a message (by level or filter), it will <em>not</em> be propagated to other loggers. - If the logger doesn’t drop a message, it will be propagated, even if no logger handles it.</p>
+</div>
+</div>
+<p>The reason for this is if you wanted to block messages from Pandas, you only have to manipulate the logger to block at the logger e.g.&nbsp;to block Pandas DEBUG messages while keeping INFO and higher, but keep debug messages from your application, you would only need to set the LEVEL on the pandas logger to INFO, and the logger for your application to DEBUG.</p>
+<p>So in addition to multiple handlers, we also have multiple <em>loggers</em>. Let’s deal with that next.</p>
+</section>
+<section id="the-logging-tree" class="level2">
+<h2 class="anchored" data-anchor-id="the-logging-tree">The logging tree</h2>
+<p>When you type <code>import logging</code> into your application, you get a <em>root</em> logger. Any other logger you create is a descendent of this root.</p>
+<p>When you call <code>logging.getLogger("silly_logger")</code>, then Python will create a logger object called <code>"silly_logger"</code> if it doesn’t exist; once the logger exists it will be returned. You will only have logger called <code>"silly_logger"</code> at any time in your program. This logger will (by default) pass any message it doesn’t drop on to the root logger.</p>
+<p>When you call <code>logging.getLogger("my_app.X.awesome_logger")</code>, you get the three loggers (either returning them if they exist, or creating them): * <code>my_app</code> * <code>my_app.X</code> * <code>my_app.X.awesome_logger</code> and a link to the <code>my_app.X.awesome_logger</code> is returned. Each one of these loggers propagates any non-dropped messages up the chain to the next logger, with the <code>my_app</code> logger propagating to the root.</p>
+<p>As a diagram, we have</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart BT
+  AWESOME[my_app.X.awesome_logger] --&gt; MAX[my_app.X] --&gt; MA[my_app] --&gt; Root
+  S[silly_logger] --&gt; Root
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<div class="{callout-info}">
+<p>It is possible to change loggers so they don’t propagate upward, but by default they do. Because it is very common for imports to have their own loggers, you should assume that the root logger will have messages passed to it, even if you turn propagation off in your loggers.</p>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
