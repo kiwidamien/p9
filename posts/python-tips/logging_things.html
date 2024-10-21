@@ -215,7 +215,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>logger.info(<span class="st">"Hello"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>See? Nothing printed. We can try the following solution:</p>
+<p>See? Nothing printed.</p>
+<p>We can try the following solution:</p>
 <div id="cell-5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -241,7 +242,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>INFO:__main__:Hello</code></pre>
 </div>
 </div>
-<p>The addition of <code>logging.basicConfig()</code> now allows you to set the level in a way that you expect! In our previous example, where we tried to log <code>one</code>, <code>two</code>, and <code>three</code>, the call to <code>logging.info</code> implicitly called the <code>logging.basicConfig()</code>, which then affects the all loggers from here on out. This call is changing <em>the root logging handler</em>, something we will define later on.</p>
+<p>The addition of <code>logging.basicConfig()</code> now allows you to set the level in a way that you expect!</p>
+<p>The problem is that python has a hierarchical system of handlers, and calling <code>logging.basicConfig()</code> affects the root handler. Logging messages start at the root hander, and it decides whether the logger you are defining even gets to see the message. In our previous example, where we tried to log <code>one</code>, <code>two</code>, and <code>three</code>, the call to <code>logging.info</code> implicitly called the <code>logging.basicConfig()</code>, which then affects the all loggers from here on out. This call is changing <em>the root logging handler</em>, something we will define later on.</p>
 <p>To show that this is a change that persists, let’s run the same code sample in the same kernel:</p>
 <div id="cell-9" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb6" data-lst-cap="Same code as above, but now `logging.basicConfig()` has been called"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
@@ -271,10 +273,116 @@ INFO:example:three</code></pre>
 </section>
 <section id="the-better-approach" class="level2">
 <h2 class="anchored" data-anchor-id="the-better-approach">The better approach</h2>
+<p>A better approach is (from <a href="https://youtu.be/9L77QExPmI0?si=ie9vzv1tq4LR8xGR&amp;t=163">mCoding’s excellent overview</a>)</p>
+<ol type="1">
+<li>Create a logger for your own script</li>
+<li>Leave propogation turned on to the root logger</li>
+<li>Put all complicated things (filters, formatters, etc) all on the root logger, not in your custom logger</li>
+<li>Use the logger you created, not the root logger, when logging messages. Your logger will propagate to the root logger, which will then use the filters and formatters to “do-the-right-thing” (TM).</li>
+</ol>
+<p>In code, you might do this:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging.config</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>logger <span class="op">=</span> logging.getLogger(<span class="st">"my_app"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>logger_config <span class="op">=</span> {</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"version"</span>: <span class="dv">1</span>,  <span class="co"># always 1, allows future updates</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"disable_existing_loggers"</span>: <span class="va">False</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"filters"</span>:{},</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"formatters"</span>: {</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"simple"</span>: {</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"format"</span>: <span class="st">"</span><span class="sc">%(levelname)s</span><span class="st"> </span><span class="sc">%(message)s</span><span class="st">"</span>,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"handlers"</span>: {</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"stderr"</span>: {</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="st">"class"</span>: <span class="st">"logging.StreamHandler"</span>,   <span class="co"># Print to screen</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">"formatter"</span>: <span class="st">"simple"</span>,              <span class="co"># References a key in the formatters dict</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>            <span class="st">"stream"</span>: <span class="st">"ext://sys.stderr"</span>,</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"loggers"</span>: {</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"root"</span>: {<span class="st">"level"</span>: <span class="st">"DEBUG"</span>, <span class="st">"handlers"</span>: [<span class="st">"stderr"</span>]}   <span class="co"># handlers references a key in handlers dict</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>logging.config.dictConfig(config<span class="op">=</span>logger_config)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co"># use your logger</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>logger.info(<span class="st">"This is my logger, and is good"</span>)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># don't use the root logger directly</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>logging.info(<span class="st">"This is using the root logger, and this is bad"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
 <section id="understanding-logging" class="level1">
 <h1>Understanding Logging</h1>
+<p>James Murphy (of mCoding) does an excellent job here of talking about what a logger is and now it works. This is very much inspired by his presentation of it in <a href="https://youtu.be/9L77QExPmI0?si=ie9vzv1tq4LR8xGR&amp;t=163">this video</a></p>
+<p>Here are the basic parts of logging:</p>
+<ul>
+<li><strong>logger</strong>: The is the the thing you make when calling <code>my_logger = getLogger("my_awesome_logger")</code>. The logger is responsible for creating LogRecords, which is a data structure containing the information we want to log. It does this with a variety of methods: <code>my_logger.debug("message")</code> creates a LogRecord with level DEBUG, etc.
+<ul>
+<li>An internal level (numeric, but commonly aliased to DEBUG, INFO, WARNING, ERROR, CRITICAL) for the logger that can be set and changed.</li>
+<li>A filter, for determining which records</li>
+<li>A collection of handlers (see below)</li>
+<li>A propagation flag</li>
+</ul></li>
+<li><strong>log records</strong>: A log record is recreated when you call <code>my_handler.debug(message)</code>, <code>my_handler.info(message)</code>, etc. It creates a data structure that contains the message you gave it, as well as injecting a collection of metadata (e.g.&nbsp;when the message was called, what module it was called in, what function you were in, what line number you were on, what the level of the message is (debug vs info vs warning vs error vs critical), etc. The various fields you can access are listed in the documentation <a href="https://docs.python.org/3/library/logging.html#logrecord-attributes">here</a>.</li>
+<li><strong>formatters</strong>: A way of taking a log record, and turning into a string that can be printed, stored in a file, a database, etc.</li>
+<li><strong>handlers</strong>: A handler takes a log record, and decides what to do with it. Each handler typically deals with place to put logs, called a sink. If you wanted to print logs to std out and save them in a file, you would typically have two handlers: one handler for printing to std out, and a separate handler for each. A handler typically has
+<ul>
+<li>An internal level (numeric, but commonly aliased to DEBUG, INFO, WARNING, ERROR, CRITICAL), just like the logger (this is a source of much confusion)</li>
+<li>A filter, for determining if this log record should be handled</li>
+<li>A formatter, which takes a log record and turns it into a string. This is the thing that is printed / stored in a file / stored in a database, etc.</li>
+<li>A sink: where we put the non-filtered records</li>
+</ul></li>
+</ul>
+<p>Here is a graphical representation of a single logger:</p>
+<pre class="mermaid"><code>block-beta
+columns 3
+
+LEVEL:3
+FILTER:3
+HANDLERS:3
+block:group1:1
+  columns 1
+  H1L["Handler1 Level"]
+  H1FLT["Handler1 Filter"]
+  H1FOR["Handler1 Formatter"]
+  H1SINK["Handler1 Sink"]
+end
+block:group2:1
+  columns 1
+  H2L["Handler2 Level"]
+  H2FLT["Handler2 Filter"]
+  H2FOR["Handler2 Formatter"]
+  H2SINK["Handler2 Sink"]
+end
+block:group3:1
+  columns 1
+  H3L["..."]
+  H3FLT["..."]
+  H3FOR["..."]
+  H3SINK["..."]
+end</code></pre>
+<p>When you call <code>my_logger.info("my message")</code>, here is what happens:</p>
+<ol type="1">
+<li>The logger first checks it’s log level. If it is INFO or lower, then the logger creates the log record. If the logger’s level is INFO or higher, we don’t even make the record.</li>
+<li>The logger then creates the LogRecord</li>
+<li>The logger then checks if the LogRecord should be filtered out. It has access to all the data in the log record, not just the level. If it should be filtered out, we stop here.</li>
+<li>The logger then passes the LogRecord to each handler. Each handler now goes through a similar set of steps:
+<ul>
+<li>Each handler checks <em>it’s</em> level, to see if it is INFO or lower. The handler stops if it’s level is higher than INFO.</li>
+<li>Each handler with level INFO or below sees if it should filter out this message (e.g.&nbsp;some records might be okay to go on a screen, but not saved to disk)</li>
+<li>For each handler with level INFO or below, that didn’t filter out the message, then formats the message, and sends it to it’s sink.</li>
+</ul></li>
+<li>The LogRecord is then propagated on to the parent logger of this logger (!!).
+<ul>
+<li>If <code>my_logger</code> rejects the LogRecord, we stop on steps 1 or 3 – we never get here. Being rejected by the logger means no propagation.</li>
+<li>If <code>my_logger</code> doesn’t reject the LogRecord, we do this step after all the handlers for <code>my_logger</code> – even if every handler for <code>my_logger</code> rejected the message.</li>
+</ul></li>
+</ol>
 
 
 </section>
