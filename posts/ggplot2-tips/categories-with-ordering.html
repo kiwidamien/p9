@@ -362,7 +362,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p>The rolling average is a relatively easy one:</p>
 <div id="cell-9" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>meat[<span class="st">'weight_rolling'</span>] <span class="op">=</span> meat.sort_values(<span class="st">'date'</span>).groupby(<span class="st">'meat_type'</span>)[<span class="st">'weight_M_lbs'</span>].transform(<span class="kw">lambda</span> x: x.rolling(<span class="dv">12</span>).mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>meat[<span class="st">'weight_rolling'</span>] <span class="op">=</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    meat</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'date'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'meat_type'</span>)[<span class="st">'weight_M_lbs'</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    .transform(<span class="kw">lambda</span> x: x.rolling(<span class="dv">12</span>).mean())</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-10" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -388,10 +393,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Now let’s lump the other categories below the top 5 into “other”. We will redo our moving averages after combining (otherwise we can get weird zero issues as we combine <code>NA</code> and ordinary values)</p>
 <div id="cell-12" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>meat[<span class="st">'meat_type'</span>] <span class="op">=</span> meat[<span class="st">'meat_type'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> meat_type: meat_type <span class="cf">if</span> meat_type <span class="kw">in</span> {<span class="st">'beef'</span>, <span class="st">'pork'</span>, <span class="st">'broilers'</span>, <span class="st">'turkey'</span>} <span class="cf">else</span> <span class="st">'other'</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>meat_simple <span class="op">=</span> meat.groupby([<span class="st">'date'</span>, <span class="st">'meat_type'</span>])[<span class="st">'weight_M_lbs'</span>].<span class="bu">sum</span>().reset_index()</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>meat_simple[<span class="st">'weight_rolling'</span>] <span class="op">=</span> meat_simple.sort_values(<span class="st">'date'</span>).groupby(<span class="st">'meat_type'</span>)[<span class="st">'weight_M_lbs'</span>].transform(<span class="kw">lambda</span> x: x.rolling(<span class="dv">12</span>).mean())</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>meat_simple <span class="op">=</span> meat_simple.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>meat[<span class="st">'meat_type'</span>] <span class="op">=</span> (</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    meat[<span class="st">'meat_type'</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">apply</span>(<span class="kw">lambda</span> meat_type: meat_type <span class="cf">if</span> meat_type <span class="kw">in</span> {<span class="st">'beef'</span>, <span class="st">'pork'</span>, <span class="st">'broilers'</span>, <span class="st">'turkey'</span>} <span class="cf">else</span> <span class="st">'other'</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>meat_simple <span class="op">=</span> meat.groupby([<span class="st">'date'</span>, <span class="st">'meat_type'</span>])[<span class="st">'weight_M_lbs'</span>].<span class="bu">sum</span>().reset_index()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>meat_simple[<span class="st">'weight_rolling'</span>] <span class="op">=</span> (</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    meat_simple</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">'date'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'meat_type'</span>)[<span class="st">'weight_M_lbs'</span>]</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    .transform(<span class="kw">lambda</span> x: x.rolling(<span class="dv">12</span>).mean())</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>meat_simple <span class="op">=</span> meat_simple.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This simplifies the number of lines we have to deal with</p>
 <div id="cell-14" class="cell" data-execution_count="6">
@@ -416,7 +429,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Now let’s deal with the order on the legend: “other” should be at the bottom of the list. Let’s order by the popularity in 2000: * Broilers * Beef * Pork * Turkey * Other</p>
 <p>Let’s do it manually first:</p>
 <div id="cell-16" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>meat_simple[<span class="st">'meat_type'</span>] <span class="op">=</span> pd.Categorical(meat_simple[<span class="st">'meat_type'</span>], categories<span class="op">=</span>[<span class="st">'broilers'</span>, <span class="st">'beef'</span>, <span class="st">'pork'</span>, <span class="st">'turkey'</span>,<span class="st">'other'</span>], ordered<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>meat_simple[<span class="st">'meat_type'</span>] <span class="op">=</span> pd.Categorical(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    meat_simple[<span class="st">'meat_type'</span>], </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    categories<span class="op">=</span>[<span class="st">'broilers'</span>, <span class="st">'beef'</span>, <span class="st">'pork'</span>, <span class="st">'turkey'</span>,<span class="st">'other'</span>], </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    ordered<span class="op">=</span><span class="va">True</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Using the <em>same code</em> as before, we now have</p>
 <div id="cell-18" class="cell" data-execution_count="8">
@@ -501,8 +518,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">4000</span>), expand<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_date(expand<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(legend_position<span class="op">=</span>(<span class="fl">0.05</span>, <span class="fl">0.99</span>), panel_border<span class="op">=</span>p9.element_blank(), axis_line<span class="op">=</span>p9.element_line(size<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'#AAAAAA'</span>))</span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>        legend_position<span class="op">=</span>(<span class="fl">0.05</span>, <span class="fl">0.99</span>), </span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        panel_border<span class="op">=</span>p9.element_blank(),</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        axis_line<span class="op">=</span>p9.element_line(size<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'#AAAAAA'</span>)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -513,8 +534,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>We could also forgo the legend and label the lines directly</p>
 <div id="cell-26" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>line_label <span class="op">=</span> meat_simple[meat_simple.date<span class="op">==</span><span class="st">'2005-01-01'</span>].copy().assign(meat_label<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">'meat_type'</span>].<span class="bu">str</span>.title())</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>line_label</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>line_label <span class="op">=</span> meat_simple[meat_simple.date<span class="op">==</span><span class="st">'2005-01-01'</span>].copy().assign(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    meat_label<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">'meat_type'</span>].<span class="bu">str</span>.title()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>line_label</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <div>
 <div>
@@ -618,10 +641,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>If you don’t like the label and line overlap, you can manually manipulate the label frame. Unfortunately, the <code>nudge_y</code> does not get passed in from the mapping.</p>
 <div id="cell-29" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>line_label <span class="op">=</span> meat_simple[meat_simple.date<span class="op">==</span><span class="st">'2005-01-01'</span>].copy().assign(meat_label<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">'meat_type'</span>].<span class="bu">str</span>.title())</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>adjustments <span class="op">=</span> {<span class="st">'pork'</span>: <span class="op">-</span><span class="dv">450</span>, <span class="st">'broilers'</span>: <span class="dv">250</span>, <span class="st">'beef'</span>: <span class="dv">200</span>}</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> meat, shift <span class="kw">in</span> adjustments.items():</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    line_label.loc[line_label.meat_type<span class="op">==</span>meat, <span class="st">'weight_rolling'</span>] <span class="op">+=</span> shift </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the same as before</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>line_label <span class="op">=</span> meat_simple[meat_simple.date<span class="op">==</span><span class="st">'2005-01-01'</span>].copy().assign(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    meat_label<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="st">'meat_type'</span>].<span class="bu">str</span>.title()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Move away from the lines / each other, taking the nudge_y into account</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a "guess and check" for finalized figures</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>adjustments <span class="op">=</span> {<span class="st">'pork'</span>: <span class="op">-</span><span class="dv">450</span>, <span class="st">'broilers'</span>: <span class="dv">250</span>, <span class="st">'beef'</span>: <span class="dv">200</span>}</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> meat, shift <span class="kw">in</span> adjustments.items():</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    line_label.loc[line_label.meat_type<span class="op">==</span>meat, <span class="st">'weight_rolling'</span>] <span class="op">+=</span> shift </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-30" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -642,16 +670,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.geom_label(</span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>line_label,</span>
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        mapping<span class="op">=</span>p9.aes(label<span class="op">=</span><span class="st">'meat_label'</span>),</span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="dv">200</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">4000</span>), expand<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_date(expand<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(</span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        panel_border<span class="op">=</span>p9.element_blank(), </span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        axis_line<span class="op">=</span>p9.element_line(size<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'#AAAAAA'</span>),</span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>        nudge_y<span class="op">=</span><span class="dv">200</span>,</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        size<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_y_continuous(limits<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">4000</span>), expand<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.scale_x_date(expand<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme_bw()</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> p9.theme(</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        panel_border<span class="op">=</span>p9.element_blank(), </span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        axis_line<span class="op">=</span>p9.element_line(size<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">'#AAAAAA'</span>),</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>        plot_subtitle<span class="op">=</span>p9.element_text(size<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
