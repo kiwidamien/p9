@@ -333,21 +333,21 @@ INFO:example:three</code></pre>
 <h2 class="anchored" data-anchor-id="a-single-logger">A single logger</h2>
 <p>Here are the basic parts of logging:</p>
 <ul>
-<li><strong>logger</strong>: The is the the thing you make when calling <code>my_logger = getLogger("my_awesome_logger")</code>. The logger is responsible for creating LogRecords, which is a data structure containing the information we want to log. It does this with a variety of methods: <code>my_logger.debug("message")</code> creates a LogRecord with level DEBUG, etc.
+<li><strong>logger</strong>: The is the the thing you make when calling <code>my_logger = getLogger("my_awesome_logger")</code>. The logger is responsible for creating LogRecords, which is a data structure containing the information we want to log. It does this with a variety of methods: <code>my_logger.debug("message")</code> creates a LogRecord with level DEBUG, etc. In addition, a logger contains the following parts:
 <ul>
 <li>An internal level (numeric, but commonly aliased to DEBUG, INFO, WARNING, ERROR, CRITICAL) for the logger that can be set and changed.</li>
 <li>A filter, for determining which records</li>
 <li>A collection of handlers (see below)</li>
 <li>A propagation flag</li>
 </ul></li>
-<li><strong>log records</strong>: A log record is recreated when you call <code>my_handler.debug(message)</code>, <code>my_handler.info(message)</code>, etc. It creates a data structure that contains the message you gave it, as well as injecting a collection of metadata (e.g.&nbsp;when the message was called, what module it was called in, what function you were in, what line number you were on, what the level of the message is (debug vs info vs warning vs error vs critical), etc. The various fields you can access are listed in the documentation <a href="https://docs.python.org/3/library/logging.html#logrecord-attributes">here</a>.</li>
+<li><strong>log records</strong>: A log record is recreated when you call <code>my_logger.debug(message)</code>, <code>my_logger.info(message)</code>, etc. It creates a data structure that contains the message you gave it, as well as injecting a collection of metadata (e.g.&nbsp;when the message was called, what module it was called in, what function you were in, what line number you were on, what the level of the message is (debug vs info vs warning vs error vs critical), etc. The various fields you can access are listed in the documentation <a href="https://docs.python.org/3/library/logging.html#logrecord-attributes">here</a>.</li>
 <li><strong>formatters</strong>: A way of taking a log record, and turning into a string that can be printed, stored in a file, a database, etc.</li>
 <li><strong>handlers</strong>: A handler takes a log record, and decides what to do with it. Each handler typically deals with place to put logs, called a sink. If you wanted to print logs to std out and save them in a file, you would typically have two handlers: one handler for printing to std out, and a separate handler for each. A handler typically has
 <ul>
 <li>An internal level (numeric, but commonly aliased to DEBUG, INFO, WARNING, ERROR, CRITICAL), just like the logger (this is a source of much confusion)</li>
 <li>A filter, for determining if this log record should be handled</li>
 <li>A formatter, which takes a log record and turns it into a string. This is the thing that is printed / stored in a file / stored in a database, etc.</li>
-<li>A sink: where we put the non-filtered records</li>
+<li>A sink: where we put the non-filtered strings we created from <em>log records</em></li>
 </ul></li>
 </ul>
 <p>Here is a graphical representation of a single logger:</p>
@@ -360,7 +360,7 @@ INFO:example:three</code></pre>
 <p>When you call <code>my_logger.info("my message")</code>, here is what happens:</p>
 <ol type="1">
 <li>The logger first checks it’s log level. If it is INFO or lower, then the logger creates the log record. If the logger’s level is INFO or higher, we don’t even make the record.</li>
-<li>The logger then creates the LogRecord</li>
+<li>The logger then creates the LogRecord, which contains the message <code>"my_message"</code>, as well as other meta data (e.g.&nbsp;when the LogRecord was created, the module/function/line number of the call, etc).</li>
 <li>The logger then checks if the LogRecord should be filtered out. It has access to all the data in the log record, not just the level. If it should be filtered out, we stop here.</li>
 <li>The logger then passes the LogRecord to each handler. Each handler now goes through a similar set of steps:
 <ul>
