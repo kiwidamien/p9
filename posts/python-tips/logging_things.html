@@ -199,7 +199,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#a-single-logger" id="toc-a-single-logger" class="nav-link" data-scroll-target="#a-single-logger">A single logger</a></li>
   <li><a href="#the-logging-tree" id="toc-the-logging-tree" class="nav-link" data-scroll-target="#the-logging-tree">The logging tree</a></li>
+  <li><a href="#going-back-to-the-initial-problem" id="toc-going-back-to-the-initial-problem" class="nav-link" data-scroll-target="#going-back-to-the-initial-problem">Going back to the initial problem</a></li>
   </ul></li>
+  <li><a href="#recommendations" id="toc-recommendations" class="nav-link" data-scroll-target="#recommendations">Recommendations</a></li>
+  <li><a href="#advanced-logging" id="toc-advanced-logging" class="nav-link" data-scroll-target="#advanced-logging">Advanced Logging</a></li>
   </ul>
 </nav>
     </div>
@@ -237,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Why is only three printed? We will see why after looking at the next example, which fixes these problems.</p>
-<div id="cell-7" class="cell" data-execution_count="7">
+<div id="cell-7" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>logging.basicConfig()</span>
@@ -252,7 +255,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The addition of <code>logging.basicConfig()</code> now allows you to set the level in a way that you expect!</p>
 <p>The problem is that python has a hierarchical system of handlers, and calling <code>logging.basicConfig()</code> affects the root handler. Logging messages start at the root hander, and it decides whether the logger you are defining even gets to see the message. In our previous example, where we tried to log <code>one</code>, <code>two</code>, and <code>three</code>, the call to <code>logging.info</code> implicitly called the <code>logging.basicConfig()</code>, which then affects the all loggers from here on out. This call is changing <em>the root logging handler</em>, something we will define later on.</p>
 <p>To show that this is a change that persists, let’s run the same code sample in the same kernel:</p>
-<div id="cell-9" class="cell" data-execution_count="8">
+<div id="cell-9" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6" data-lst-cap="Same code as above, but now `logging.basicConfig()` has been called"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> logging</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>logger <span class="op">=</span> logging.getLogger(<span class="st">'example'</span>)</span>
@@ -381,7 +384,12 @@ Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Here are a couple of “gotchas”: - If you have a <em>handler</em> with a level of DEBUG, but the logger has a higer level (e.g.&nbsp;INFO), you won’t see any DEBUG messages. This is because the logger is dropping the messages before the handler gets a chance to see it. - If you have a logger that drops a message (by level or filter), it will <em>not</em> be propagated to other loggers. - If the logger doesn’t drop a message, it will be propagated, even if no logger handles it.</p>
+<p>Here are a couple of “gotchas”</p>
+<ul>
+<li><p>If you have a <em>handler</em> with a level of DEBUG, but the logger has a higer level (e.g.&nbsp;INFO), you won’t see any DEBUG messages. This is because the logger is dropping the messages before the handler gets a chance to see it.</p></li>
+<li><p>If you have a logger that drops a message (by level or filter), it will <em>not</em> be propagated to other loggers.</p></li>
+<li><p>If the logger doesn’t drop a message, it will be propagated, even if no logger handles it.</p></li>
+</ul>
 </div>
 </div>
 <p>The reason for this is if you wanted to block messages from Pandas, you only have to manipulate the logger to block at the logger e.g.&nbsp;to block Pandas DEBUG messages while keeping INFO and higher, but keep debug messages from your application, you would only need to set the LEVEL on the pandas logger to INFO, and the logger for your application to DEBUG.</p>
@@ -411,9 +419,78 @@ Warning
 <div class="{callout-info}">
 <p>It is possible to change loggers so they don’t propagate upward, but by default they do. Because it is very common for imports to have their own loggers, you should assume that the root logger will have messages passed to it, even if you turn propagation off in your loggers.</p>
 </div>
-
-
 </section>
+<section id="going-back-to-the-initial-problem" class="level2">
+<h2 class="anchored" data-anchor-id="going-back-to-the-initial-problem">Going back to the initial problem</h2>
+<p>When we started this article, we looked at a simple problem of why logging didn’t work until the root logger or <code>basicConfig</code> was called. Let’s look at it again</p>
+<div id="cell-24" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> logging</span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a>logger <span class="op">=</span> logging.getLogger(<span class="st">'test'</span>)</span>
+<span id="cb9-4"><a href="#cb9-4"></a>logger.setLevel(logging.DEBUG)</span>
+<span id="cb9-5"><a href="#cb9-5"></a>logger.info(<span class="st">"This should be seen, but won't be"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6"></a>logger.warning(<span class="st">"This will be seen"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>logger.info(<span class="st">"But this won't be"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8"></a></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co"># Now use the root logger</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>logging.info(<span class="st">"Hi"</span>)</span>
+<span id="cb9-11"><a href="#cb9-11"></a></span>
+<span id="cb9-12"><a href="#cb9-12"></a>logger.info(<span class="st">"Bye!"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What we get out is just</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>This will be seen</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>INFO:test:Bye<span class="op">!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The order of events are roughly:</p>
+<ul>
+<li>Line 3: We make a new logger called <code>test</code>. This logger does not have any handlers. The root logger <em>does</em> have a handler, which prints to standard error, and WARNING or higher by default.</li>
+<li>Line 4: We set the warning level of the <code>test</code> logger to DEBUG.</li>
+<li>Line 5: We send the <code>test</code> logger an INFO message.
+<ul>
+<li>It accepts it, but has no handlers. It makes a log record, and propagates on to the root logger.</li>
+<li>The root logger has a default level of WARNING, and ignores this message.</li>
+</ul></li>
+<li>Line 6: We sent the <code>test</code> logger a WARNING message.
+<ul>
+<li>It accepts it, but has not handlers. It makes a log record, and propagates on to the root logger.</li>
+<li>The root logger has a default level of WARNING, so it will handle this message.</li>
+<li>The root logger’s default formatter just prints the message</li>
+</ul></li>
+<li>Line 7: We sent the <code>test</code> logger an INFO message.
+<ul>
+<li>Same as line 5, it passes the LogRecord onto the root logger, and the root logger ignores it.</li>
+</ul></li>
+<li>Line 10: We send the <em>root</em> logger its first message directly (rather than it being passed). Or more precisely, we are calling <code>info</code> in the logging module.
+<ul>
+<li>You can see from the <a href="https://github.com/python/cpython/blob/ded105a62b9d78717f8dc64652e3903190b585dd/Lib/logging/__init__.py#L2187">code in Github</a>, this sees we have no root configured yet, so it calls <code>basicConfig()</code>.</li>
+<li>From the docstring of <code>basicConfig()</code> you can see it does nothing, unless we don’t have handlers for the root logger.</li>
+<li>In that case, it will add one (a stream), set a basic format string with a bit more information, and not require a level anymore.</li>
+</ul></li>
+<li>Line 12: We send the <code>test</code> logger an INFO message.
+<ul>
+<li>It accepts it, but has no handlers. It propagates it to the root logger.</li>
+<li>The root logger now accepts any level after the <code>basicConfig()</code>, and has the formatter updated. From the LogRecord, it produces <code>INFO:test:Bye!</code></li>
+</ul></li>
+</ul>
+<p>If this code is in a Jupyter notebook and you ran in again, you would have different output, precisely because the root logger has already been configured.</p>
+</section>
+</section>
+<section id="recommendations" class="level1">
+<h1>Recommendations</h1>
+<p>With multiple layers of loggers and handlers, it is easy to see how messages could get lost or repeated. Here are some recommendations take from James Murphy’s mCoding video:</p>
+<ol type="1">
+<li>Don’t use the root logger, make your own.</li>
+<li>You don’t need a logger for every file, just make one for your app.</li>
+<li>Call DictConfig on your logger, to explicitly set up what you want the handlers, filters, and formatters to be</li>
+<li>Put all handlers, filters, and formatters on the root logger, not your own logger(s). Just let everything propagate up to the root, and then deal with it there (slight exception if using a QueueHandler)</li>
+</ol>
+</section>
+<section id="advanced-logging" class="level1">
+<h1>Advanced Logging</h1>
+<p>The first thing you should do is watch the mCoding video mentioned a few times already. It has some examples of setting up a rotating file handler, and a queue handler (which I will go into more detail on below).</p>
+<p>Beyong that, there are lots of different configuration “recipes” that you can find in the <a href="https://docs.python.org/3/howto/logging-cookbook.html">Python Logging Cookbook</a>.</p>
+<p>The Queue handler is interesting, because the idea is that logging posts to a queue. The queue is processed by a worker in another thread, so that if your log involves an expensive IO operation (TBC)</p>
+
+
 </section>
 
 </main> <!-- /main -->
