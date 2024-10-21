@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Damien Martin">
+<meta name="dcterms.date" content="2024-10-14">
+<meta name="description" content="Tracing particularly slow imports">
 
-<title>p9 - Series: python and pandas tips</title>
+<title>p9 - Timing imports</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +26,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,65 +69,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -137,7 +80,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">p9</span>
     </a>
   </div>
@@ -148,7 +91,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> 
+    <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">p9</span></a>
   </li>  
   <li class="nav-item compact">
@@ -166,111 +109,119 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page">
-      <h1 class="title">Series: python and pandas tips</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">Timing imports</h1>
+                  <div>
+        <div class="description">
+          Tracing particularly slow imports
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">package-management</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Damien Martin </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 14, 2024</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a>
+  <ul class="collapse">
+  <li><a href="#what-slow-imports-usually-indicate" id="toc-what-slow-imports-usually-indicate" class="nav-link" data-scroll-target="#what-slow-imports-usually-indicate">What slow imports usually indicate</a></li>
+  </ul></li>
+  <li><a href="#profiling" id="toc-profiling" class="nav-link" data-scroll-target="#profiling">Profiling</a></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="problem" class="level1">
+<h1>Problem</h1>
+<p>When importing particular packages, they are importing slowly. You’d like to find why, and if there is a way you can refactor your code / your team’s code to improve import speed.</p>
+<section id="what-slow-imports-usually-indicate" class="level2">
+<h2 class="anchored" data-anchor-id="what-slow-imports-usually-indicate">What slow imports usually indicate</h2>
+<p><em>Too much is being done at import time</em></p>
+<p>Importing should typically not “do work” (e.g.&nbsp;it should not load datafiles, connect to databases, instantiate drivers, etc). The biggest exception to this is probably setting up <code>logger</code>s, because the first caller to <code>logging.basicConfig</code> can change what all the other loggers can see.</p>
+<p>Because logging is a <a href="https://en.wikipedia.org/wiki/Cross-cutting_concern">cross-cutting</a> <a href="https://www.milanjovanovic.tech/blog/balancing-cross-cutting-concerns-in-clean-architecture">concern</a>, loggers are also generally made as singletons at the module level.</p>
+<p>The reason that imports can be so slow is if we have a package structure like</p>
+<pre><code>world/
+│
+├── africa/
+│   ├── __init__.py
+│   └── zimbabwe.py
+│
+├── europe/
+│   ├── __init__.py
+│   ├── greece.py
+│   ├── norway.py
+│   └── spain.py
+│
+└── __init__.py</code></pre>
+<p>and you write <code>import world.europe.spain</code> into Python, then</p>
+<ol type="1">
+<li>First <code>world.__init__.py</code> gets imported (if it hasn’t been imported already)</li>
+<li>Then <code>world.europe.__init__.py</code> gets imported (if it hasn’t been imported already)</li>
+<li>Finally, <code>world.europe.spain.py</code> gets imported</li>
+</ol>
+<p>If you did <code>import world.europe.greece</code> after importing <code>spain</code>, then only <code>world.europe.greece.py</code> would be imported on this second call (each module is only imported once).</p>
+<p>But this means if your <code>__init__.py</code> files anywhere in the tree “do work”, then every subpackage that you import is also going to be slow. This is one of the reasons for recommending that <code>__init__.py</code> files are kept relatively sparse.</p>
+</section>
+</section>
+<section id="profiling" class="level1">
+<h1>Profiling</h1>
+<p>There is no need to write a custom hook to see what the problematic imports are! Just use <code>-X importtime</code> on the command line, as described <a href="https://realpython.com/python-import/#profile-imports">here</a></p>
+<p>Example:</p>
+<pre><code>$ python -X importtime -c "import datetime"
+import time: self [us] | cumulative | imported package
+...
+import time:        87 |         87 |   time
+import time:       180 |        180 |   math
+import time:       234 |        234 |   _datetime
+import time:       820 |       1320 | datetime</code></pre>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="python,logging" data-listing-date-sort="1729191600000" data-listing-file-modified-sort="1729123337003" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="320">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/python-tips/logging_things.html" class="no-external">Logging - How to and best practices</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/python-tips/logging_things.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/python-tips/logging_things.html" class="no-external">Giving some of the best logging practices, and clarifying some of the logging confusion.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/python-tips/logging_things.html" class="no-external">
-<div class="listing-date">
-Oct 17, 2024
-</div>
-<div class="listing-reading-time">
-2 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="python,package-management" data-listing-date-sort="1728932400000" data-listing-file-modified-sort="1728950452516" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="362">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/python-tips/timing_imports.html" class="no-external">Timing imports</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/python-tips/timing_imports.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/python-tips/timing_imports.html" class="no-external">Tracing particularly slow imports</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/python-tips/timing_imports.html" class="no-external">
-<div class="listing-date">
-Oct 14, 2024
-</div>
-<div class="listing-reading-time">
-2 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="python,package-management" data-listing-date-sort="1716836400000" data-listing-file-modified-sort="1716839662526" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="65">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/python-tips/publish_python.html" class="no-external">Publishing Python Packages</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/python-tips/publish_python.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/python-tips/publish_python.html" class="no-external">How to push packages to artifactory with either setup.py or pyproject.toml</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/python-tips/publish_python.html" class="no-external">
-<div class="listing-date">
-May 27, 2024
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
+<div>
+    <hr>
+    
+    <h4> Stay in touch </h4>
+    
+    <hr>
+    </div>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

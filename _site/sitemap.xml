@@ -21,6 +21,10 @@
     <lastmod>2024-09-30T02:51:53.005Z</lastmod>
   </url>
   <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
+    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
+  </url>
+  <url>
     <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
     <lastmod>2024-04-27T22:29:05.757Z</lastmod>
   </url>
@@ -57,16 +61,20 @@
     <lastmod>2024-04-30T23:37:24.489Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
-    <lastmod>2024-10-09T17:57:51.430Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/categories-with-ordering.html</loc>
+    <lastmod>2024-10-21T02:11:47.906Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/presto-series.html</loc>
     <lastmod>2024-05-27T19:57:08.857Z</lastmod>
   </url>
   <url>
+    <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
+    <lastmod>2024-10-09T17:57:51.430Z</lastmod>
+  </url>
+  <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/histograms.html</loc>
-    <lastmod>2024-10-09T18:01:42.254Z</lastmod>
+    <lastmod>2024-10-20T22:50:26.727Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/waterfall/gallery-waterfall.html</loc>
@@ -103,6 +111,10 @@
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
     <lastmod>2024-05-27T19:54:22.526Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
+    <lastmod>2024-10-17T00:02:17.003Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/pandas/post.html</loc>

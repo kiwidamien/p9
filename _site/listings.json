@@ -2,6 +2,9 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/categories-with-ordering.html",
+      "/posts/python-tips/logging_things.html",
+      "/posts/python-tips/timing_imports.html",
       "/posts/ggplot2-tips/histograms.html",
       "/posts/pandas/stats_models_regression.html",
       "/posts/pandas/grouper.html",
@@ -31,6 +34,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/categories-with-ordering.html",
       "/posts/ggplot2-tips/histograms.html",
       "/posts/ggplot2-tips/gnattt_charts.html",
       "/posts/ggplot2-tips/making-plots-wider.html",
@@ -58,6 +62,8 @@
   {
     "listing": "/python-series.html",
     "items": [
+      "/posts/python-tips/logging_things.html",
+      "/posts/python-tips/timing_imports.html",
       "/posts/python-tips/publish_python.html"
     ]
   },
