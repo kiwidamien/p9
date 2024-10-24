@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/puzzles/arbitrarge.html",
       "/posts/ggplot2-tips/categories-with-ordering.html",
       "/posts/python-tips/logging_things.html",
       "/posts/python-tips/timing_imports.html",

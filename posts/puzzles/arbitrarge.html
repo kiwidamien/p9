@@ -7,10 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Damien Martin">
-<meta name="dcterms.date" content="2024-05-07">
-<meta name="description" content="Everytime I go to do dates in presto I have to look up how to do conversions.">
 
-<title>p9 - Dates in presto</title>
+<title>p9</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -144,18 +142,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Dates in presto</h1>
-                  <div>
-        <div class="description">
-          Everytime I go to do dates in presto I have to look up how to do conversions.
-        </div>
-      </div>
-                          <div class="quarto-categories">
-                <div class="quarto-category">presto</div>
-                <div class="quarto-category">sql</div>
-                <div class="quarto-category">dates</div>
-              </div>
-                  </div>
+      
+                      </div>
   </div>
     
   
@@ -168,12 +156,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             </div>
     </div>
       
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">May 7, 2024</p>
-      </div>
-    </div>
     
       
     </div>
@@ -183,15 +165,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#common-date-problem-format-problems" id="toc-common-date-problem-format-problems" class="nav-link active" data-scroll-target="#common-date-problem-format-problems">Common date problem format problems</a></li>
-  <li><a href="#create-a-date-spine" id="toc-create-a-date-spine" class="nav-link" data-scroll-target="#create-a-date-spine">Create a date spine</a></li>
-  <li><a href="#date-differences" id="toc-date-differences" class="nav-link" data-scroll-target="#date-differences">Date Differences</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -200,38 +174,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="common-date-problem-format-problems" class="level1">
-<h1>Common date problem format problems</h1>
-<p>Convert a string to a datetime object</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_PARSE(<span class="st">'2020-06-10'</span>, <span class="st">'%Y-%m-%d'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Convert one date format to another</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_FORMAT(DATE_PARSE(<span class="st">'2020-06-10'</span>, <span class="st">'%Y-%m-%d'</span>), <span class="st">'%Y%m%d'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="create-a-date-spine" class="level1">
-<h1>Create a date spine</h1>
-<p>Want to do weekly smoothing, but worried that some days might be missing from the date range? Here is a way to generate a date range that you can left join to.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> UNNEST(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">SEQUENCE</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            FROM_ISO8601_DATE(<span class="st">'2010-01-20'</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            FROM_ISO8601_DATE(<span class="st">'2010-01-24'</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="dt">INTERVAL</span> <span class="st">'1'</span> <span class="dt">DAY</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> <span class="kw">AS</span> t1(date_array)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="date-differences" class="level1">
-<h1>Date Differences</h1>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_DIFF(<span class="st">'day'</span>, <span class="dt">DATE</span>(<span class="st">'2024-09-16'</span>), <span class="dt">DATE</span>(<span class="st">'2024-09-20'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This returns <code>4</code>. Things that can catch you:</p>
-<ul>
-<li>Has to be <code>day</code> (not <code>days</code>) for the unit</li>
-<li>The earlier date goes first (unlike subtraction, where we would start with the later date)</li>
-</ul>
+<div id="cell-0" class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-</section>
 
 </main> <!-- /main -->
 <div>
