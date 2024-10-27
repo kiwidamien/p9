@@ -2,7 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
-      "/posts/puzzles/arbitrarge.html",
+      "/posts/pandas/timezones.html",
       "/posts/ggplot2-tips/categories-with-ordering.html",
       "/posts/python-tips/logging_things.html",
       "/posts/python-tips/timing_imports.html",
@@ -71,6 +71,7 @@
   {
     "listing": "/pandas-series.html",
     "items": [
+      "/posts/pandas/timezones.html",
       "/posts/pandas/stats_models_regression.html",
       "/posts/pandas/grouper.html",
       "/posts/pandas/apply_across_multiple_columns.html",
