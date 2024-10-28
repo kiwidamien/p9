@@ -8,9 +8,9 @@
 
 <meta name="author" content="Damien Martin">
 <meta name="dcterms.date" content="2024-05-07">
-<meta name="description" content="Everytime I go to do dates in presto I have to look up how to do conversions.">
+<meta name="description" content="Fun diversion">
 
-<title>p9 - Dates in presto</title>
+<title>p9 - Arbitrage in Betting</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -144,16 +173,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Dates in presto</h1>
+      <h1 class="title">Arbitrage in Betting</h1>
                   <div>
         <div class="description">
-          Everytime I go to do dates in presto I have to look up how to do conversions.
+          Fun diversion
         </div>
       </div>
                           <div class="quarto-categories">
-                <div class="quarto-category">presto</div>
-                <div class="quarto-category">sql</div>
-                <div class="quarto-category">dates</div>
+                <div class="quarto-category">puzzles</div>
               </div>
                   </div>
   </div>
@@ -187,9 +214,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#common-date-problem-format-problems" id="toc-common-date-problem-format-problems" class="nav-link active" data-scroll-target="#common-date-problem-format-problems">Common date problem format problems</a></li>
-  <li><a href="#create-a-date-spine" id="toc-create-a-date-spine" class="nav-link" data-scroll-target="#create-a-date-spine">Create a date spine</a></li>
-  <li><a href="#date-differences" id="toc-date-differences" class="nav-link" data-scroll-target="#date-differences">Date Differences</a></li>
+  <li><a href="#the-ambivalent-bet" id="toc-the-ambivalent-bet" class="nav-link active" data-scroll-target="#the-ambivalent-bet">The ambivalent bet</a></li>
+  <li><a href="#probabilities" id="toc-probabilities" class="nav-link" data-scroll-target="#probabilities">Probabilities</a></li>
   </ul>
 </nav>
     </div>
@@ -200,35 +226,57 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="common-date-problem-format-problems" class="level1">
-<h1>Common date problem format problems</h1>
-<p>Convert a string to a datetime object</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_PARSE(<span class="st">'2020-06-10'</span>, <span class="st">'%Y-%m-%d'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Convert one date format to another</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_FORMAT(DATE_PARSE(<span class="st">'2020-06-10'</span>, <span class="st">'%Y-%m-%d'</span>), <span class="st">'%Y%m%d'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-1" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine <span class="im">as</span> p9</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Suppose we are betting on two outcomes, with unknown probability. For definiteness, let’s take the winner of the presidential election in 2024.</p>
+<p>Let’s suppose one bookie is offering us fractional odds <span class="math inline">\(t\)</span> Trump will win. e.g.&nbsp;If <span class="math inline">\(t = 4\)</span>, then on a 1USD bet, you would recieve 4USD in back (i.e.&nbsp;your original 1USD + 3USD in profit). Some bookie offers you odds <span class="math inline">\(h\)</span> that Harris will win.</p>
+<p>If you were to bet T on Trump, and H on Harris, then here are your possible outcomes:</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Bet</th>
+<th>Trump Wins</th>
+<th>Harris Wins</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Trump Bet</td>
+<td><span class="math inline">\((t-1)T\)</span></td>
+<td><span class="math inline">\(-T\)</span></td>
+</tr>
+<tr class="even">
+<td>Harris Bet</td>
+<td><span class="math inline">\(-H\)</span></td>
+<td><span class="math inline">\((h-1)H\)</span></td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td><span class="math inline">\((t-1)T - H\)</span></td>
+<td>$(h-1)H - T</td>
+</tr>
+</tbody>
+</table>
+<p>Your guaranteed outcome is the minimum of the two results.</p>
+<section id="the-ambivalent-bet" class="level2">
+<h2 class="anchored" data-anchor-id="the-ambivalent-bet">The ambivalent bet</h2>
+<p>Let’s ask what amount we can be guaranteed walking away with, so we want <span class="math inline">\((t-1)T - H = (h-1)H - T\)</span>.</p>
+<p>This simplifies to <span class="math inline">\(tT = hH\)</span>, or <span class="math inline">\(H = (t/h)T\)</span>. If your entire betting bugget is <span class="math inline">\(B = T + H\)</span>, this breaks down to</p>
+<p><span class="math display">\[H = (t/h)T = (t/h)(B - H) \Rightarrow H = \frac{t}{h+t}B\]</span> and <span class="math display">\[T = \frac{h}{h+t}B\]</span></p>
+<p>This makes sense intuitively: the bigger the payout on a candidate, the less you’d bet on them and the more you’d have to bet on their opponent, to get an ambivalent result.</p>
+<p>What is the amount you would get? It works out to <span class="math display">\[\text{ambivalent return} = \left(\frac{th  - h - t}{h+t}\right)B\]</span></p>
 </section>
-<section id="create-a-date-spine" class="level1">
-<h1>Create a date spine</h1>
-<p>Want to do weekly smoothing, but worried that some days might be missing from the date range? Here is a way to generate a date range that you can left join to.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> UNNEST(</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">SEQUENCE</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            FROM_ISO8601_DATE(<span class="st">'2010-01-20'</span>),</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            FROM_ISO8601_DATE(<span class="st">'2010-01-24'</span>),</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="dt">INTERVAL</span> <span class="st">'1'</span> <span class="dt">DAY</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a> <span class="kw">AS</span> t1(date_array)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="date-differences" class="level1">
-<h1>Date Differences</h1>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> DATE_DIFF(<span class="st">'day'</span>, <span class="dt">DATE</span>(<span class="st">'2024-09-16'</span>), <span class="dt">DATE</span>(<span class="st">'2024-09-20'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This returns <code>4</code>. Things that can catch you:</p>
-<ul>
-<li>Has to be <code>day</code> (not <code>days</code>) for the unit</li>
-<li>The earlier date goes first (unlike subtraction, where we would start with the later date)</li>
-</ul>
+<section id="probabilities" class="level2">
+<h2 class="anchored" data-anchor-id="probabilities">Probabilities</h2>
+<p>None of this mentioned probabilities, as the ambivalent return works regardless of whether the probabilites are accurately specified, or if there is a margin. Translating into implied probabilities does help us determine if the ambivalent return is positive.</p>
+<p>You get zero expectation value if you assume the probability of Trump winning is <span class="math inline">\(1/t\)</span>, and similarily for Harris <span class="math inline">\(1/h\)</span>.</p>
+<p><span class="math display">\[\text{ambivalent return} = \left(\frac{th  - h - t}{h+t}\right) B = \left(\frac{1  - 1/t - 1/h}{1/t+1/h}\right) B = \left(\frac{1-p_t - p_h}{p_t + p_h}\right) B\]</span></p>
+<p>If <span class="math inline">\(p_t + p_h &lt; 1\)</span>, then there is an arbitrage possibility, where we can guarantee a positive rate of return.</p>
 
 
 </section>

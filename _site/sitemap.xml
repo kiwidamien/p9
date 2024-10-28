@@ -13,20 +13,24 @@
     <lastmod>2024-04-27T22:29:05.755Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/pandas/apply_across_multiple_columns.html</loc>
-    <lastmod>2024-07-08T17:25:14.032Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/timezones.html</loc>
+    <lastmod>2024-10-27T22:50:59.442Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/pandas/stats_models_regression.html</loc>
-    <lastmod>2024-09-30T02:51:53.005Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/post.html</loc>
+    <lastmod>2024-07-03T16:25:53.234Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
-    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
+    <lastmod>2024-10-21T09:52:44.711Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
+    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
-    <lastmod>2024-04-27T22:29:05.757Z</lastmod>
+    <lastmod>2024-10-21T09:45:44.826Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html</loc>
@@ -109,16 +113,16 @@
     <lastmod>2024-05-22T22:30:27.599Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
-    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
+    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
-    <lastmod>2024-10-21T08:53:14.932Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/stats_models_regression.html</loc>
+    <lastmod>2024-09-30T02:51:53.005Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/pandas/post.html</loc>
-    <lastmod>2024-07-03T16:25:53.234Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/apply_across_multiple_columns.html</loc>
+    <lastmod>2024-07-08T17:25:14.032Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/pandas/grouper.html</loc>
