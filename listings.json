@@ -2,6 +2,8 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/pandas/named_aggregations.html",
+      "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/pandas/timezones.html",
       "/posts/ggplot2-tips/categories-with-ordering.html",
       "/posts/python-tips/logging_things.html",
@@ -10,7 +12,6 @@
       "/posts/pandas/stats_models_regression.html",
       "/posts/pandas/grouper.html",
       "/posts/ggplot2-tips/gnattt_charts.html",
-      "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/ggplot2-tips/making-plots-wider.html",
       "/posts/ggplot2-tips/datetime-axes.html",
       "/posts/python-tips/publish_python.html",
@@ -71,10 +72,11 @@
   {
     "listing": "/pandas-series.html",
     "items": [
+      "/posts/pandas/named_aggregations.html",
+      "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/pandas/timezones.html",
       "/posts/pandas/stats_models_regression.html",
       "/posts/pandas/grouper.html",
-      "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/pandas/post.html"
     ]
   }
