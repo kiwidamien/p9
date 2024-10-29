@@ -9,7 +9,7 @@
 <meta name="author" content="Damien Martin">
 <meta name="dcterms.date" content="2024-10-28">
 
-<title>p9 - Pandas: Transform like behavior using data from multiple columns</title>
+<title>p9 - Named aggregations</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -146,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Pandas: Transform like behavior using data from multiple columns</h1>
+      <h1 class="title">Named aggregations</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">pandas</div>
               </div>
@@ -182,7 +182,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#the-problem" id="toc-the-problem" class="nav-link active" data-scroll-target="#the-problem">The problem</a></li>
+  <li><a href="#problem" id="toc-problem" class="nav-link active" data-scroll-target="#problem">Problem</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
 </nav>
     </div>
@@ -193,16 +195,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="the-problem" class="level1">
-<h1>The problem</h1>
-<p>We have a couple of different patterns for aggregating data collections:</p>
-<ul>
-<li><code>groupby([group_cols]).apply</code>: Allows us to group, and then apply an arbitrary function on the group. Resulting dataframe will have a different index (the grouped variable).</li>
-<li><code>groupby([group_cols])['column'].transform</code>: Allows us to group, and then apply a transformation on the <code>column</code> data, and return the aggregate result for each row. ie. the index returned will be the same (we preserve rows)</li>
-</ul>
-<p>For example, if we had grades of different houses in a potions class:</p>
-<div id="cell-3" class="cell" data-execution_count="2">
-<div class="cell-output cell-output-display" data-execution_count="2">
+<section id="problem" class="level1">
+<h1>Problem</h1>
+<p>In pandas, we often want to do an aggregation with a groupby, and a rename simultaneously. Let’s see an example of this by getting tne minimum and maximum daily temperatures from a temperature dataset:</p>
+<div id="cell-3" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> vega_datasets</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> vega_datasets <span class="im">import</span> data</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>seattle_temperatures <span class="op">=</span> data(<span class="st">'seattle-temps'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>seattle_temperatures.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <div>
 <div>
 
@@ -211,68 +215,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">name</th>
-<th data-quarto-table-cell-role="th">house</th>
-<th data-quarto-table-cell-role="th">class</th>
-<th data-quarto-table-cell-role="th">grade</th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">temp</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">0</td>
-<td>Harry</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>68</td>
+<td>2010-01-01 00:00:00</td>
+<td>39.4</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">1</td>
-<td>Hermionie</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>99</td>
+<td>2010-01-01 01:00:00</td>
+<td>39.2</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">2</td>
-<td>Ron</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>34</td>
+<td>2010-01-01 02:00:00</td>
+<td>39.0</td>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">3</td>
-<td>Neville</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>55</td>
+<td>2010-01-01 03:00:00</td>
+<td>38.9</td>
 </tr>
 <tr class="odd">
 <td data-quarto-table-cell-role="th">4</td>
-<td>Dracro</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>85</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>Goyle</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>70</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>Crabble</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>75</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>Daphne</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>88</td>
+<td>2010-01-01 04:00:00</td>
+<td>38.8</td>
 </tr>
 </tbody>
 </table>
@@ -281,21 +252,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Apply creates a new index:</p>
-<div id="cell-5" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>grades.groupby(<span class="st">'house'</span>)[<span class="st">'grade'</span>].<span class="bu">apply</span>(<span class="kw">lambda</span> x: x.mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>house
-Griffindor    64.0
-Slytherin     79.5
-Name: grade, dtype: float64</code></pre>
-</div>
-</div>
-<p>Whereas transform will create a new row:</p>
-<div id="cell-7" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>grades[<span class="st">'house_mean'</span>] <span class="op">=</span> grades.groupby(<span class="st">'house'</span>)[<span class="st">'grade'</span>].transform(<span class="kw">lambda</span> x: x.mean())</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>grades</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="6">
+<p>We will do this the least sophisticated way: make a new column, group by it, and then apply an aggregation:</p>
+<div id="cell-5" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    seattle_temperatures</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    .assign(date_only<span class="op">=</span>seattle_temperatures[<span class="st">'date'</span>].dt.date)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'date_only'</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'temp'</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    .agg([<span class="st">'min'</span>, <span class="st">'max'</span>])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
 <div>
 <div>
 
@@ -304,77 +270,40 @@ Name: grade, dtype: float64</code></pre>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">name</th>
-<th data-quarto-table-cell-role="th">house</th>
-<th data-quarto-table-cell-role="th">class</th>
-<th data-quarto-table-cell-role="th">grade</th>
-<th data-quarto-table-cell-role="th">house_mean</th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">max</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">date_only</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Harry</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>68</td>
-<td>64.0</td>
+<td data-quarto-table-cell-role="th">2010-01-01</td>
+<td>38.6</td>
+<td>43.5</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Hermionie</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>99</td>
-<td>64.0</td>
+<td data-quarto-table-cell-role="th">2010-01-02</td>
+<td>38.8</td>
+<td>43.8</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Ron</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>34</td>
-<td>64.0</td>
+<td data-quarto-table-cell-role="th">2010-01-03</td>
+<td>39.0</td>
+<td>44.0</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Neville</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>55</td>
-<td>64.0</td>
+<td data-quarto-table-cell-role="th">2010-01-04</td>
+<td>39.2</td>
+<td>44.2</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>Dracro</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>85</td>
-<td>79.5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>Goyle</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>70</td>
-<td>79.5</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>Crabble</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>75</td>
-<td>79.5</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>Daphne</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>88</td>
-<td>79.5</td>
+<td data-quarto-table-cell-role="th">2010-01-05</td>
+<td>39.3</td>
+<td>44.4</td>
 </tr>
 </tbody>
 </table>
@@ -383,11 +312,17 @@ Name: grade, dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>This isn’t super useful, but we could turn it into something like a z-score:</p>
-<div id="cell-9" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>grades[<span class="st">'z_score_within_house'</span>] <span class="op">=</span> grades.groupby(<span class="st">'house'</span>)[<span class="st">'grade'</span>].transform(<span class="kw">lambda</span> x: (x<span class="op">-</span>x.mean())<span class="op">/</span>x.std())</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>grades</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="10">
+<p>This works, but leaves awkward column names (<code>min</code> and <code>max</code>), with no reference to what they are the min or max <em>of</em>. It gets worse if we are trying to look at multiple columns of data:</p>
+<div id="cell-7" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Including the date timestamps as part of the groupby dosen't really make sense here</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># but including anyway</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    seattle_temperatures</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    .assign(date_only<span class="op">=</span>seattle_temperatures[<span class="st">'date'</span>].dt.date)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'date_only'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    .agg({<span class="st">'temp'</span>: [<span class="st">'min'</span>, <span class="st">'max'</span>], <span class="st">'date'</span>: <span class="st">'count'</span>})</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
 <div>
 <div>
 
@@ -396,95 +331,248 @@ Name: grade, dtype: float64</code></pre>
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">name</th>
-<th data-quarto-table-cell-role="th">house</th>
-<th data-quarto-table-cell-role="th">class</th>
-<th data-quarto-table-cell-role="th">grade</th>
-<th data-quarto-table-cell-role="th">house_mean</th>
-<th data-quarto-table-cell-role="th">z_score</th>
-<th data-quarto-table-cell-role="th">z_score_within_house</th>
+<th colspan="2" data-quarto-table-cell-role="th" data-halign="left">temp</th>
+<th data-quarto-table-cell-role="th">date</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">min</th>
+<th data-quarto-table-cell-role="th">max</th>
+<th data-quarto-table-cell-role="th">count</th>
+</tr>
+<tr class="header">
+<th data-quarto-table-cell-role="th">date_only</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Harry</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>68</td>
-<td>64.0</td>
-<td>0.146977</td>
-<td>0.146977</td>
+<td data-quarto-table-cell-role="th">2010-01-01</td>
+<td>38.6</td>
+<td>43.5</td>
+<td>24</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Hermionie</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>99</td>
-<td>64.0</td>
-<td>1.286046</td>
-<td>1.286046</td>
+<td data-quarto-table-cell-role="th">2010-01-02</td>
+<td>38.8</td>
+<td>43.8</td>
+<td>24</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Ron</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>34</td>
-<td>64.0</td>
-<td>-1.102326</td>
-<td>-1.102326</td>
+<td data-quarto-table-cell-role="th">2010-01-03</td>
+<td>39.0</td>
+<td>44.0</td>
+<td>24</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>Neville</td>
-<td>Griffindor</td>
-<td>potions</td>
-<td>55</td>
-<td>64.0</td>
-<td>-0.330698</td>
-<td>-0.330698</td>
+<td data-quarto-table-cell-role="th">2010-01-04</td>
+<td>39.2</td>
+<td>44.2</td>
+<td>24</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>Dracro</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>85</td>
-<td>79.5</td>
-<td>0.652730</td>
-<td>0.652730</td>
+<td data-quarto-table-cell-role="th">2010-01-05</td>
+<td>39.3</td>
+<td>44.4</td>
+<td>24</td>
 </tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">5</td>
-<td>Goyle</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>70</td>
-<td>79.5</td>
-<td>-1.127443</td>
-<td>-1.127443</td>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Now we have context, but we also have a multi-index that we have to deal with.</p>
+</section>
+<section id="solution" class="level1">
+<h1>Solution</h1>
+<p>Use the <code>agg(new_column_name=(column_name, aggfunc), ...)</code> syntax, to rename the columns and keep at a single level.</p>
+</section>
+<section id="examples" class="level1">
+<h1>Examples</h1>
+<p>Solving the first aggregation (min and max temperatures per day):</p>
+<div id="cell-13" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    seattle_temperatures</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    .assign(date_only<span class="op">=</span>seattle_temperatures[<span class="st">'date'</span>].dt.date)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'date_only'</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    .agg(daily_high_temp<span class="op">=</span>(<span class="st">'temp'</span>, <span class="st">'max'</span>), daily_low_temp<span class="op">=</span>(<span class="st">'temp'</span>, <span class="st">'min'</span>))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">daily_high_temp</th>
+<th data-quarto-table-cell-role="th">daily_low_temp</th>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">6</td>
-<td>Crabble</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>75</td>
-<td>79.5</td>
-<td>-0.534052</td>
-<td>-0.534052</td>
+<th data-quarto-table-cell-role="th">date_only</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-01</td>
+<td>43.5</td>
+<td>38.6</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">7</td>
-<td>Daphne</td>
-<td>Slytherin</td>
-<td>potions</td>
-<td>88</td>
-<td>79.5</td>
-<td>1.008764</td>
-<td>1.008764</td>
+<td data-quarto-table-cell-role="th">2010-01-02</td>
+<td>43.8</td>
+<td>38.8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-03</td>
+<td>44.0</td>
+<td>39.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2010-01-04</td>
+<td>44.2</td>
+<td>39.2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-05</td>
+<td>44.4</td>
+<td>39.3</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>The second aggregation is solved similarily:</p>
+<div id="cell-15" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    seattle_temperatures</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    .assign(date_only<span class="op">=</span>seattle_temperatures[<span class="st">'date'</span>].dt.date)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    .groupby(<span class="st">'date_only'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    .agg(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        daily_high_temp<span class="op">=</span>(<span class="st">'temp'</span>, <span class="st">'max'</span>), </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        daily_low_temp<span class="op">=</span>(<span class="st">'temp'</span>, <span class="st">'min'</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        num_measurements<span class="op">=</span>(<span class="st">'date'</span>, <span class="st">'count'</span>),</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">daily_high_temp</th>
+<th data-quarto-table-cell-role="th">daily_low_temp</th>
+<th data-quarto-table-cell-role="th">num_measurements</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">date_only</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-01</td>
+<td>43.5</td>
+<td>38.6</td>
+<td>24</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2010-01-02</td>
+<td>43.8</td>
+<td>38.8</td>
+<td>24</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-03</td>
+<td>44.0</td>
+<td>39.0</td>
+<td>24</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2010-01-04</td>
+<td>44.2</td>
+<td>39.2</td>
+<td>24</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-05</td>
+<td>44.4</td>
+<td>39.3</td>
+<td>24</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<p>Finally, we can also use the <code>Grouper</code> to avoid creating an intermediate column, if we make the date column the index:</p>
+<div id="cell-17" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    seattle_temperatures</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    .set_index(<span class="st">'date'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    .groupby(pd.Grouper(freq<span class="op">=</span><span class="st">'1d'</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    .agg(daily_high_temp<span class="op">=</span>(<span class="st">'temp'</span>, <span class="st">'max'</span>), daily_low_temp<span class="op">=</span>(<span class="st">'temp'</span>, <span class="st">'min'</span>))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>).head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">daily_high_temp</th>
+<th data-quarto-table-cell-role="th">daily_low_temp</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-01</td>
+<td>43.5</td>
+<td>38.6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2010-01-02</td>
+<td>43.8</td>
+<td>38.8</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-03</td>
+<td>44.0</td>
+<td>39.0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">2010-01-04</td>
+<td>44.2</td>
+<td>39.2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2010-01-05</td>
+<td>44.4</td>
+<td>39.3</td>
 </tr>
 </tbody>
 </table>
