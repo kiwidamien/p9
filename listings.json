@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/pandas/dates_to_weeks.html",
       "/posts/pandas/named_aggregations.html",
       "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/pandas/timezones.html",
@@ -72,6 +73,7 @@
   {
     "listing": "/pandas-series.html",
     "items": [
+      "/posts/pandas/dates_to_weeks.html",
       "/posts/pandas/named_aggregations.html",
       "/posts/pandas/apply_across_multiple_columns.html",
       "/posts/pandas/timezones.html",
