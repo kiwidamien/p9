@@ -198,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="problem" class="level1">
 <h1>Problem</h1>
-<p>In a <a href="./gropuer.ipynb">previous article</a> we looked at time-series, with a datetime index, and making it spaced out at a regular interval. In particular, ensuring that it kept “missing dates” (e.g.&nbsp;if counting sales, incorporated 0 sales for a week with no entries, rather than just skipping that week).</p>
+<p>In a <a href="../../posts/pandas/grouper.html">previous article</a> we looked at time-series, with a datetime index, and making it spaced out at a regular interval. In particular, ensuring that it kept “missing dates” (e.g.&nbsp;if counting sales, incorporated 0 sales for a week with no entries, rather than just skipping that week).</p>
 <p>This article looks at how to take a regular datetime column and “standardize it”, for example, making it the Monday at the beginning of the week.</p>
 <p>For example, let’s say that we wanted to make this product catalog have the week that the product was introduced:</p>
 <div id="cell-3" class="cell" data-execution_count="1">
