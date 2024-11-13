@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/dodging_points.html",
       "/posts/pandas/dates_to_weeks.html",
       "/posts/pandas/named_aggregations.html",
       "/posts/pandas/apply_across_multiple_columns.html",
@@ -37,6 +38,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/dodging_points.html",
       "/posts/ggplot2-tips/categories-with-ordering.html",
       "/posts/ggplot2-tips/histograms.html",
       "/posts/ggplot2-tips/gnattt_charts.html",
