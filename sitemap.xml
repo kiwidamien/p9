@@ -25,16 +25,16 @@
     <lastmod>2024-11-04T19:12:06.600Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
-    <lastmod>2024-10-21T09:52:44.711Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/pandas/annoying_timeseries.html</loc>
+    <lastmod>2025-02-19T20:56:17.362Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
-    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
+    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
-    <lastmod>2024-10-21T09:45:44.826Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/dice_rolls.html</loc>
+    <lastmod>2024-05-22T22:30:27.599Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html</loc>
@@ -117,12 +117,20 @@
     <lastmod>2024-04-30T21:25:53.612Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/dice_rolls.html</loc>
-    <lastmod>2024-05-22T22:30:27.599Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/gatcha.html</loc>
+    <lastmod>2024-11-18T21:09:45.137Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
-    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
+    <lastmod>2024-10-21T09:45:44.826Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
+    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
+    <lastmod>2024-10-21T09:52:44.711Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/pandas/named_aggregations.html</loc>

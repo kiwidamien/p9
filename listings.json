@@ -2,6 +2,8 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/pandas/annoying_timeseries.html",
+      "/posts/interview_questions/gatcha.html",
       "/posts/ggplot2-tips/dodging_points.html",
       "/posts/pandas/dates_to_weeks.html",
       "/posts/pandas/named_aggregations.html",
@@ -75,6 +77,7 @@
   {
     "listing": "/pandas-series.html",
     "items": [
+      "/posts/pandas/annoying_timeseries.html",
       "/posts/pandas/dates_to_weeks.html",
       "/posts/pandas/named_aggregations.html",
       "/posts/pandas/apply_across_multiple_columns.html",
