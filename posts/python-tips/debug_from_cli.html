@@ -189,7 +189,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#the-problem" id="toc-the-problem" class="nav-link active" data-scroll-target="#the-problem">The problem</a></li>
   <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
-  <li><a href="#simple-example" id="toc-simple-example" class="nav-link" data-scroll-target="#simple-example">Simple Example</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
+  <ul class="collapse">
+  <li><a href="#single-script" id="toc-single-script" class="nav-link" data-scroll-target="#single-script">Single Script</a></li>
+  <li><a href="#multiple-scripts" id="toc-multiple-scripts" class="nav-link" data-scroll-target="#multiple-scripts">Multiple Scripts</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -211,12 +215,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>You can use the <code>pdb</code> module and <code>b</code>reakpoint arguments when calling Python.</p>
 <p>To give an explicit example:</p>
 <pre class="shell"><code>python -m pdb -c "b 3" -c c your_script.py</code></pre>
-<p>where * <code>-m pdb</code>: use the Python debugger module * <code>-c "b 3"</code>: the <code>-c</code> flag means “use this command as if it were in a <code>.pdbrc</code> file”. The <code>b 3</code> is breakpoint syntax, explained below. In this case <code>b 3</code> means “create a breakpoint on line 3” * <code>-c c</code>: when starting the script, immediately “continue”. Without this, <code>pdb</code> will effectively be waiting on a breakpoint at the beginning of the script.</p>
+<p>where</p>
+<ul>
+<li><code>-m pdb</code>: use the Python debugger module</li>
+<li><code>-c "b 3"</code>: the <code>-c</code> flag means “use this command as if it were in a <code>.pdbrc</code> file”. The <code>b 3</code> is breakpoint syntax, explained below. In this case <code>b 3</code> means “create a breakpoint on line 3”</li>
+<li><code>-c c</code>: when starting the script, immediately “continue”. Without this, <code>pdb</code> will effectively be waiting on a breakpoint at the beginning of the script.</li>
+</ul>
 <p>The breakpoint syntax is</p>
 <pre><code>b(reak) [([filename:]lineno | function) [, condition]]</code></pre>
 </section>
-<section id="simple-example" class="level1">
-<h1>Simple Example</h1>
+<section id="examples" class="level1">
+<h1>Examples</h1>
+<section id="single-script" class="level2">
+<h2 class="anchored" data-anchor-id="single-script">Single Script</h2>
 <p>We have a script for calculating Fibonacci numbers:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fib.py</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fib(n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
@@ -250,10 +261,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">-&gt;</span> a, b <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>(Pdb) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>We are not going through the debugging steps here, but there are a list of useful commands for <a href="https://docs.python.org/3.2/library/pdb.html#debugger-commands">pdb</a> on their site.</p>
+<p><strong>Warning for this specific example:</strong> Annoyingly enough, one of the variables you would like to know about in this example (<code>n</code>) is being shadowed by a PDB command: (n)ext! You might want to see what the value of <code>n</code> is, but typing this into the debugger makes it go to the next line. To access the value of <code>n</code> in the debugger, you have to escape it by using <code>!n</code>.</p>
 <p>If you are doing a lot of debugging of the same commands, you can also put your breakpoint string into a local <code>.pdbrc</code> file in the current directory, which will only get used when calling python with the <code>-m pdb</code> string. This doesn’t technically fulfill the requirement of not making permanent file changes that could get pushed to prod (but you can use <code>.gitignore</code>!), but these arguments won’t be used if you don’t have a debugger running.</p>
 <p>Note that <code>pylint</code> and <code>ruff</code> both have rules that can check that your code doesn’t have a breakpoint as a pre-commit hook as well (it is rule <a href="https://docs.astral.sh/ruff/rules/debugger/">T100</a> for <code>ruff</code>)</p>
+</section>
+<section id="multiple-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-scripts">Multiple Scripts</h2>
+<p>Now suppose we have two files:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fib.py</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fib_func(n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> n</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):   </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> b, a<span class="op">+</span>b  <span class="co"># This is line 6</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> b   <span class="co"># This line is wrong, we should be returning a</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># driver.py</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fib</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"fib(</span><span class="sc">{</span>n<span class="sc">:2d}</span><span class="ss">) = </span><span class="sc">{</span>fib<span class="sc">.</span>fib_func(n)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You might use the debugger this way:</p>
+<pre class="shell"><code>python -m pdb -c "b fib:3,n&gt;1" -c c driver.py</code></pre>
+<p>or</p>
+<pre class="shell"><code>python -m pdb -c "b fib.fib_func,n&gt;1" -c c driver.py </code></pre>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
