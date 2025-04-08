@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Damien Martin">
+<meta name="dcterms.date" content="2025-04-08">
+<meta name="description" content="Putting breakpoints explicitly in your code has the downside they might get checked in, and break things in production. This is how to set a breakpoint from the CLI.">
 
-<title>p9 - Series: Pandas tips</title>
+<title>p9 - Setting breakpoints from the command line</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +23,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,65 +103,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-reading-time','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -137,7 +114,7 @@ window.Quarto = {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">p9</span>
     </a>
   </div>
@@ -148,7 +125,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./blog.html"> 
+    <a class="nav-link" href="../../blog.html"> 
 <span class="menu-text">p9</span></a>
   </li>  
   <li class="nav-item compact">
@@ -166,226 +143,162 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page">
-      <h1 class="title">Series: Pandas tips</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">Setting breakpoints from the command line</h1>
+                  <div>
+        <div class="description">
+          Putting breakpoints explicitly in your code has the downside they might get checked in, and break things in production. This is how to set a breakpoint from the CLI.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">debugging</div>
+                <div class="quarto-category">pdb</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Damien Martin </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 8, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link active" data-scroll-target="#the-problem">The problem</a></li>
+  <li><a href="#solution" id="toc-solution" class="nav-link" data-scroll-target="#solution">Solution</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
+  <ul class="collapse">
+  <li><a href="#single-script" id="toc-single-script" class="nav-link" data-scroll-target="#single-script">Single Script</a></li>
+  <li><a href="#multiple-scripts" id="toc-multiple-scripts" class="nav-link" data-scroll-target="#multiple-scripts">Multiple Scripts</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="the-problem" class="level1">
+<h1>The problem</h1>
+<p>Let’s say our program isn’t crashing: it is producing output, but that output is wrong. For example, we want to calculate a rolling average over 3 days, and we are getting the wrong output.</p>
+<p>We can put a breakpoint into the code, and use either VS Code or the command line to debug, but this raises the risk of forgetting to remove it.</p>
+<p>We would like a way to temporarily enter a breakpoint <em>from the invocation</em> without touching the source file.</p>
+</section>
+<section id="solution" class="level1">
+<h1>Solution</h1>
+<p>You can use the <code>pdb</code> module and <code>b</code>reakpoint arguments when calling Python.</p>
+<p>To give an explicit example:</p>
+<pre class="shell"><code>python -m pdb -c "b 3" -c c your_script.py</code></pre>
+<p>where</p>
+<ul>
+<li><code>-m pdb</code>: use the Python debugger module</li>
+<li><code>-c "b 3"</code>: the <code>-c</code> flag means “use this command as if it were in a <code>.pdbrc</code> file”. The <code>b 3</code> is breakpoint syntax, explained below. In this case <code>b 3</code> means “create a breakpoint on line 3”</li>
+<li><code>-c c</code>: when starting the script, immediately “continue”. Without this, <code>pdb</code> will effectively be waiting on a breakpoint at the beginning of the script.</li>
+</ul>
+<p>The breakpoint syntax is</p>
+<pre><code>b(reak) [([filename:]lineno | function) [, condition]]</code></pre>
+</section>
+<section id="examples" class="level1">
+<h1>Examples</h1>
+<section id="single-script" class="level2">
+<h2 class="anchored" data-anchor-id="single-script">Single Script</h2>
+<p>We have a script for calculating Fibonacci numbers:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fib.py</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fib(n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> n</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):   </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> b, a<span class="op">+</span>b  <span class="co"># This is line 6</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> b   <span class="co"># This line is wrong, we should be returning a</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fib(<span class="dv">0</span>))  <span class="co"># 0 -- correct</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fib(<span class="dv">1</span>))  <span class="co"># 1 -- correct</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fib(<span class="dv">2</span>))  <span class="co"># 2 -- should be 1</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fib(<span class="dv">3</span>))  <span class="co"># 3 -- should be 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>One way to debug might be</p>
+<pre class="shell"><code>python -m pdb -c "b 6" -c c fib.py</code></pre>
+<p>which drops us here:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Breakpoint <span class="dv">1</span> at fib.py:<span class="dv">6</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> fib.py(<span class="dv">6</span>)fib()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">-&gt;</span> a, b <span class="op">=</span> b, a<span class="op">+</span>b</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>(Pdb) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can also just break at the <code>fib</code> function itself when the argument is greater than 1</p>
+<pre class="shell"><code>python -m pdb -c "b fib,n&gt;1" -c c fib.py</code></pre>
+<p>This drops us at</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Breakpoint <span class="dv">1</span> at fib.py:<span class="dv">1</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dv">0</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> fib.py(<span class="dv">2</span>)fib()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">-&gt;</span> a, b <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>(Pdb) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We are not going through the debugging steps here, but there are a list of useful commands for <a href="https://docs.python.org/3.2/library/pdb.html#debugger-commands">pdb</a> on their site.</p>
+<p><strong>Warning for this specific example:</strong> Annoyingly enough, one of the variables you would like to know about in this example (<code>n</code>) is being shadowed by a PDB command: (n)ext! You might want to see what the value of <code>n</code> is, but typing this into the debugger makes it go to the next line. To access the value of <code>n</code> in the debugger, you have to escape it by using <code>!n</code>.</p>
+<p>If you are doing a lot of debugging of the same commands, you can also put your breakpoint string into a local <code>.pdbrc</code> file in the current directory, which will only get used when calling python with the <code>-m pdb</code> string. This doesn’t technically fulfill the requirement of not making permanent file changes that could get pushed to prod (but you can use <code>.gitignore</code>!), but these arguments won’t be used if you don’t have a debugger running.</p>
+<p>Note that <code>pylint</code> and <code>ruff</code> both have rules that can check that your code doesn’t have a breakpoint as a pre-commit hook as well (it is rule <a href="https://docs.astral.sh/ruff/rules/debugger/">T100</a> for <code>ruff</code>)</p>
+</section>
+<section id="multiple-scripts" class="level2">
+<h2 class="anchored" data-anchor-id="multiple-scripts">Multiple Scripts</h2>
+<p>Now suppose we have two files:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fib.py</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fib_func(n: <span class="bu">int</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> n <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> n</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):   </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        a, b <span class="op">=</span> b, a<span class="op">+</span>b  <span class="co"># This is line 6</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> b   <span class="co"># This line is wrong, we should be returning a</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># driver.py</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> fib</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"fib(</span><span class="sc">{</span>n<span class="sc">:2d}</span><span class="ss">) = </span><span class="sc">{</span>fib<span class="sc">.</span>fib_func(n)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You might use the debugger this way:</p>
+<pre class="shell"><code>python -m pdb -c "b fib:3,n&gt;1" -c c driver.py</code></pre>
+<p>or</p>
+<pre class="shell"><code>python -m pdb -c "b fib.fib_func,n&gt;1" -c c driver.py </code></pre>
 
 
+</section>
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="pandas,timeseries" data-listing-date-sort="1739952000000" data-listing-file-modified-sort="1739998577362" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="210">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/annoying_timeseries.html" class="no-external">Pandas and annoyances of time-series</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/annoying_timeseries.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/annoying_timeseries.html" class="no-external">We have a time-series, where we have multiple groups, and some missing dates. For example, let’s look at two customers and suppose we have the following data</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/annoying_timeseries.html" class="no-external">
-<div class="listing-date">
-Feb 19, 2025
-</div>
-<div class="listing-reading-time">
-2 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="pandas,dates" data-listing-date-sort="1730707200000" data-listing-file-modified-sort="1730747526600" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="198">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/dates_to_weeks.html" class="no-external">Pandas: Time-series on multiple columns (grouper)</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/dates_to_weeks.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/dates_to_weeks.html" class="no-external">In a previous article we looked at time-series, with a datetime index, and making it spaced out at a regular interval. In particular, ensuring that it kept “missing dates”…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/dates_to_weeks.html" class="no-external">
-<div class="listing-date">
-Nov 4, 2024
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="pandas" data-listing-date-sort="1730098800000" data-listing-file-modified-sort="1730229572615" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="155">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/named_aggregations.html" class="no-external">Named aggregations</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/named_aggregations.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/named_aggregations.html" class="no-external">In pandas, we often want to do an aggregation with a groupby, and a rename simultaneously. Let’s see an example of this by getting tne minimum and maximum daily temperatures…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/named_aggregations.html" class="no-external">
-<div class="listing-date">
-Oct 28, 2024
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="pandas" data-listing-date-sort="1730098800000" data-listing-file-modified-sort="1730087852389" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="103">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/apply_across_multiple_columns.html" class="no-external">Pandas: Transform like behavior using data from multiple columns</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/apply_across_multiple_columns.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/apply_across_multiple_columns.html" class="no-external">We have a couple of different patterns for aggregating data collections:</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/apply_across_multiple_columns.html" class="no-external">
-<div class="listing-date">
-Oct 28, 2024
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="pandas,timezones" data-listing-date-sort="1730012400000" data-listing-file-modified-sort="1730069459442" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="259">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/timezones.html" class="no-external">Timezones in Pandas</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/timezones.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/timezones.html" class="no-external">Pandas has it’s on version of datetimes. If you recieve a datetime in UTC (but only because you know it from context, not because it was labelled), how do you</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/timezones.html" class="no-external">
-<div class="listing-date">
-Oct 27, 2024
-</div>
-<div class="listing-reading-time">
-2 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="pandas,statsmodels" data-listing-date-sort="1727506800000" data-listing-file-modified-sort="1727664713005" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="43">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/stats_models_regression.html" class="no-external">Stats Models: Linear Regression</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/stats_models_regression.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/stats_models_regression.html" class="no-external">Everytime I want to do a linear regression with statsmodels, I have to look up the imports for linear regressions and formulas, so here it is.</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/stats_models_regression.html" class="no-external">
-<div class="listing-date">
-Sep 28, 2024
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="pandas" data-listing-date-sort="1725951600000" data-listing-file-modified-sort="1730745953073" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="284">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/grouper.html" class="no-external">Pandas: Time-series on multiple columns (grouper)</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/grouper.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/grouper.html" class="no-external"><em>See related problem of resetting dates to weeks</em></a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/grouper.html" class="no-external">
-<div class="listing-date">
-Sep 10, 2024
-</div>
-<div class="listing-reading-time">
-2 min
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="pandas,matplotlib,notebook,EDA" data-listing-date-sort="1714546800000" data-listing-file-modified-sort="1720023953234" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="54">
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/pandas/post.html" class="no-external">Quick EDA settings hacks</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/pandas/post.html" class="no-external"></a>
-</div>
-<div class="listing-description">
-<a href="./posts/pandas/post.html" class="no-external">Settings that make notebooks easier to use, especially for EDA</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/pandas/post.html" class="no-external">
-<div class="listing-date">
-May 1, 2024
-</div>
-<div class="listing-reading-time">
-1 min
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
+<div>
+    <hr>
+    
+    <h4> Thanks for reading! </h4>
+    
+    <hr>
+    </div>
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
