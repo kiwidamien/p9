@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/python-tips/debug_from_cli.html",
       "/posts/pandas/annoying_timeseries.html",
       "/posts/interview_questions/gatcha.html",
       "/posts/ggplot2-tips/dodging_points.html",
@@ -69,6 +70,7 @@
   {
     "listing": "/python-series.html",
     "items": [
+      "/posts/python-tips/debug_from_cli.html",
       "/posts/python-tips/logging_things.html",
       "/posts/python-tips/timing_imports.html",
       "/posts/python-tips/publish_python.html"
