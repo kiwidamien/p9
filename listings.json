@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/pandas/label_contiguous_blocks.html",
       "/posts/python-tips/debug_from_cli.html",
       "/posts/pandas/annoying_timeseries.html",
       "/posts/interview_questions/gatcha.html",
@@ -79,6 +80,7 @@
   {
     "listing": "/pandas-series.html",
     "items": [
+      "/posts/pandas/label_contiguous_blocks.html",
       "/posts/pandas/annoying_timeseries.html",
       "/posts/pandas/dates_to_weeks.html",
       "/posts/pandas/named_aggregations.html",
