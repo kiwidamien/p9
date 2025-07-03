@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/interview_questions/column_counting.html",
       "/posts/pandas/label_contiguous_blocks.html",
       "/posts/python-tips/debug_from_cli.html",
       "/posts/pandas/annoying_timeseries.html",
