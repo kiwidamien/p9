@@ -2,6 +2,7 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/python-tips/using_jinja2.html",
       "/posts/interview_questions/column_counting.html",
       "/posts/pandas/label_contiguous_blocks.html",
       "/posts/python-tips/debug_from_cli.html",
@@ -72,6 +73,7 @@
   {
     "listing": "/python-series.html",
     "items": [
+      "/posts/python-tips/using_jinja2.html",
       "/posts/python-tips/debug_from_cli.html",
       "/posts/python-tips/logging_things.html",
       "/posts/python-tips/timing_imports.html",
