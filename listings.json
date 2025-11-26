@@ -2,6 +2,8 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/ggplot2-tips/label-end-of-lines.html",
+      "/posts/causal/causal.html",
       "/posts/python-tips/using_jinja2.html",
       "/posts/interview_questions/column_counting.html",
       "/posts/pandas/label_contiguous_blocks.html",
@@ -44,6 +46,7 @@
   {
     "listing": "/ggplot-series.html",
     "items": [
+      "/posts/ggplot2-tips/label-end-of-lines.html",
       "/posts/ggplot2-tips/dodging_points.html",
       "/posts/ggplot2-tips/categories-with-ordering.html",
       "/posts/ggplot2-tips/histograms.html",
