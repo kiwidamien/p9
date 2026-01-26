@@ -2,6 +2,9 @@
   {
     "listing": "/blog.html",
     "items": [
+      "/posts/git/find_commit_that_deleted_a_file.html",
+      "/posts/git/find_which_branch_a_commit_lives_on.html",
+      "/posts/git/list_of_diffs_between_commits.html",
       "/posts/ggplot2-tips/label-end-of-lines.html",
       "/posts/causal/causal.html",
       "/posts/python-tips/using_jinja2.html",

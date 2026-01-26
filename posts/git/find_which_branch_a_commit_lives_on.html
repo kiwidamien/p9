@@ -7,10 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Damien Martin">
-<meta name="dcterms.date" content="2024-05-01">
-<meta name="description" content="Settings that make notebooks easier to use, especially for EDA">
+<meta name="dcterms.date" content="2026-01-24">
 
-<title>p9 - Quick EDA settings hacks</title>
+<title>p9 - How to find which branch a commit lives on</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -103,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -144,17 +146,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Quick EDA settings hacks</h1>
-                  <div>
-        <div class="description">
-          Settings that make notebooks easier to use, especially for EDA
-        </div>
-      </div>
-                          <div class="quarto-categories">
-                <div class="quarto-category">pandas</div>
-                <div class="quarto-category">matplotlib</div>
-                <div class="quarto-category">notebook</div>
-                <div class="quarto-category">EDA</div>
+      <h1 class="title">How to find which branch a commit lives on</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">git</div>
               </div>
                   </div>
   </div>
@@ -172,7 +166,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 1, 2024</p>
+        <p class="date">January 24, 2026</p>
       </div>
     </div>
     
@@ -188,13 +182,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#pandas" id="toc-pandas" class="nav-link active" data-scroll-target="#pandas">Pandas</a>
+  <li><a href="#which-branch-is-questioncommit-on" id="toc-which-branch-is-questioncommit-on" class="nav-link active" data-scroll-target="#which-branch-is-questioncommit-on">Which branch is <code>QuestionCommit</code> on?</a>
   <ul class="collapse">
-  <li><a href="#setting-the-maximum-number-of-rows" id="toc-setting-the-maximum-number-of-rows" class="nav-link" data-scroll-target="#setting-the-maximum-number-of-rows">Setting the maximum number of rows</a></li>
-  </ul></li>
-  <li><a href="#matplotlib" id="toc-matplotlib" class="nav-link" data-scroll-target="#matplotlib">Matplotlib</a>
-  <ul class="collapse">
-  <li><a href="#retina-display-quality" id="toc-retina-display-quality" class="nav-link" data-scroll-target="#retina-display-quality">Retina display quality</a></li>
+  <li><a href="#the-git-graph" id="toc-the-git-graph" class="nav-link" data-scroll-target="#the-git-graph">The git-graph</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -206,28 +196,94 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="pandas" class="level1">
-<h1>Pandas</h1>
-<section id="setting-the-maximum-number-of-rows" class="level2">
-<h2 class="anchored" data-anchor-id="setting-the-maximum-number-of-rows">Setting the maximum number of rows</h2>
-<pre><code>import pandas as pd 
-pd.set_option('display.min_rows', 500)
-pd.set_option('display.max_rows', 500)</code></pre>
-<p>Setting to <code>None</code> will also allow you to show all rows.</p>
-<p>I really like the ability to do this on a one-off basis too:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> pd.option_context(<span class="st">'display.max_rows'</span>, <span class="dv">100</span>, <span class="st">'display.max_columns'</span>, <span class="dv">10</span>):</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  display(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-</section>
-<section id="matplotlib" class="level1">
-<h1>Matplotlib</h1>
-<section id="retina-display-quality" class="level2">
-<h2 class="anchored" data-anchor-id="retina-display-quality">Retina display quality</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format<span class="op">=</span><span class="st">'retina'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>When using git, I most commonly think about the branches, rather than the commits themselves.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">---
+title: Example Git diagram
+---
+gitGraph
+   commit
+   commit
+   branch develop
+   checkout develop
+   commit id: "QuestionCommit"
+   commit
+   branch exp
+   commit
+   commit id: "E-888abc0"
+   checkout develop
+   commit id: "D-1234abc"
+   checkout main
+   commit
+   commit id: "M-888wxyz"
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p>When we switch to a branch, we are on the commit that is the latest commit on that branch. With the current example repo state</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Switching to branch</th>
+<th>Takes you to commit</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>main</td>
+<td>M-888wxyz</td>
+</tr>
+<tr class="even">
+<td>develop</td>
+<td>D-1234abc</td>
+</tr>
+<tr class="odd">
+<td>exp</td>
+<td>E-888abc0</td>
+</tr>
+</tbody>
+</table>
+<p>If we learned that some random commit, such as <code>QuestionCommit</code>, was responsible for a deployment, we could reasonable ask questions like:</p>
+<ul>
+<li>Is this commit head of any branch?
+<ul>
+<li>In this case, the answer is No.</li>
+</ul></li>
+<li>Which branch(es) does this commit lie on?
+<ul>
+<li>This question has the “obvious” answer that it is on the “develop” branch, but we will give a more detailed answer below.</li>
+</ul></li>
+</ul>
+<p>Ideally you would only be deploying from one branch, but if you find a stray deployment it is perhaps more important you can answer these questions!</p>
+<section id="which-branch-is-questioncommit-on" class="level2">
+<h2 class="anchored" data-anchor-id="which-branch-is-questioncommit-on">Which branch is <code>QuestionCommit</code> on?</h2>
+<p>There are a couple of different ways of answering this:</p>
+<ol type="1">
+<li>When this commit was the head of a branch, what branch was that?
+<ul>
+<li>Asked this way, it is on <code>develop</code> branch.</li>
+</ul></li>
+<li>When looking at our current branches, which branch(es) is this branch in the history of?
+<ul>
+<li>Asked this way, <code>QuestionCommit</code> is in the history of the head of the <code>develop</code> and <code>exp</code> branches.</li>
+</ul></li>
+</ol>
+<p>The value in asking this way is that <code>develop</code> and <code>exp</code> are both valid places to consider “fast-forwarding” the commit to before making additional changes (or you can branch directly off this commit).</p>
+<p>What you usually want is the first one:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">--contains</span> QuestionCommit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will show you what changed in that particular commit:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> show <span class="at">--decorate</span> QuestionCommit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="the-git-graph" class="level3">
+<h3 class="anchored" data-anchor-id="the-git-graph">The git-graph</h3>
+<p>You can also look for it in the “a dog” graph:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--decorate</span> <span class="at">--graph</span> <span class="at">--all</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and then search for your commit. Here <code>a dog</code> comes from “all, decorate, oneline, graph”.</p>
 
 
 </section>
@@ -237,7 +293,7 @@ pd.set_option('display.max_rows', 500)</code></pre>
 <div>
     <hr>
     
-    <h4> Stay in touch </h4>
+    <h4> Thanks for reading! </h4>
     
     <hr>
     </div>
