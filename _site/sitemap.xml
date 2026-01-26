@@ -29,32 +29,36 @@
     <lastmod>2024-10-29T19:19:32.615Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
-    <lastmod>2024-10-21T09:52:44.711Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/git/list_of_diffs_between_commits.html</loc>
+    <lastmod>2026-01-25T20:28:32.044Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
-    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/git/find_commit_that_deleted_a_file.html</loc>
+    <lastmod>2026-01-25T20:28:26.167Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/debug_from_cli.html</loc>
-    <lastmod>2025-04-08T21:50:13.519Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/using_jinja2.html</loc>
+    <lastmod>2025-09-23T16:17:12.822Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
-    <lastmod>2024-10-21T09:45:44.826Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
+    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/gatcha.html</loc>
-    <lastmod>2024-11-18T21:09:45.137Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/dice_rolls.html</loc>
+    <lastmod>2024-05-22T22:30:27.599Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html</loc>
-    <lastmod>2024-05-01T18:10:34.147Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/column_counting.html</loc>
+    <lastmod>2025-07-03T06:49:25.594Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/dual_bar/dual_bar.html</loc>
-    <lastmod>2024-04-29T22:54:27.939Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/composing/composing-plots.html</loc>
+    <lastmod>2024-04-30T21:25:53.612Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/label-end-of-lines.html</loc>
+    <lastmod>2025-11-26T18:39:53.512Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/making-manual-error-bars.html</loc>
@@ -85,12 +89,16 @@
     <lastmod>2024-10-20T22:50:26.727Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
-    <lastmod>2024-10-09T17:57:51.430Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/causal/causal.html</loc>
+    <lastmod>2025-11-20T15:53:30.440Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/presto-series.html</loc>
     <lastmod>2024-05-27T19:57:08.857Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/presto/dates.html</loc>
+    <lastmod>2024-10-09T17:57:51.430Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/categories-with-ordering.html</loc>
@@ -125,24 +133,36 @@
     <lastmod>2024-05-30T18:30:02.073Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/composing/composing-plots.html</loc>
-    <lastmod>2024-04-30T21:25:53.612Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/dual_bar/dual_bar.html</loc>
+    <lastmod>2024-04-29T22:54:27.939Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/column_counting.html</loc>
-    <lastmod>2025-07-03T06:49:25.594Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/ggplot2-tips/palette/making-a-fixed-color-palette.html</loc>
+    <lastmod>2024-05-01T18:10:34.147Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/dice_rolls.html</loc>
-    <lastmod>2024-05-22T22:30:27.599Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/interview_questions/gatcha.html</loc>
+    <lastmod>2026-01-26T01:26:48.480Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/publish_python.html</loc>
-    <lastmod>2024-05-27T19:54:22.526Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/welcome/index.html</loc>
+    <lastmod>2024-10-21T09:45:44.826Z</lastmod>
   </url>
   <url>
-    <loc>https://kiwidamien.github.io/p9/posts/python-tips/using_jinja2.html</loc>
-    <lastmod>2025-09-23T16:17:12.822Z</lastmod>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/debug_from_cli.html</loc>
+    <lastmod>2025-04-08T21:50:13.519Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/timing_imports.html</loc>
+    <lastmod>2024-10-15T00:00:52.516Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/python-tips/logging_things.html</loc>
+    <lastmod>2024-10-21T09:52:44.711Z</lastmod>
+  </url>
+  <url>
+    <loc>https://kiwidamien.github.io/p9/posts/git/find_which_branch_a_commit_lives_on.html</loc>
+    <lastmod>2026-01-25T01:29:13.979Z</lastmod>
   </url>
   <url>
     <loc>https://kiwidamien.github.io/p9/posts/pandas/annoying_timeseries.html</loc>

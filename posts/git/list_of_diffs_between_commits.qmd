@@ -1,0 +1,6 @@
+---
+title: "List of diffs between a commit"
+author: "Damien Martin"
+date: "2026-01-24"
+categories: [git]
+---

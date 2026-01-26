@@ -1,0 +1,54 @@
+---
+title: "Find the commit that deleted a file"
+author: "Damien Martin"
+date: "2026-01-24"
+categories: [git]
+---
+
+
+Problem:
+
+You have a file, `test.py`, that was deleted in some previous commit. Turns out you want some information from it.
+
+1. How do you find which commit deleted the file?
+2. How do you recover (or at least view) the most recent version of the file?
+
+## Which commit deleted the file?
+
+```bash 
+# 
+git log --diff-filter=D -- test.py
+
+# Simple, one liner
+git log --oneline --diff-filter=D -- test.py
+```
+
+### Forgetting the name
+
+When a file is deleted, it no longer appears in autocomplete. So one thing that you can do is browse all deleted files
+by using 
+```base
+git log --all --name-status --diff-filter=D        
+```
+
+## How to recover the most recent version of the file?
+
+We need to find the commit _before_ the deletion. We can find that with 
+```bash
+git log --oneline -- test.py
+```
+The most recent one is where the file was deleted. The previous commit is the one where the file was most recently updated.
+
+You can also filter to commits that changed the file, by limiting to A(dd) and M(odify) commits to the file:
+```bash
+git log --oneline --diff-filter=AM -- test.py
+```
+
+Once we have the commit, e.g. `abc0123`, we can get the file with 
+```
+# older versions of git
+git checkout abc0123 -- test.py
+
+# or (newer versions of git)
+git restore --source=abc0123 -- test.py
+```

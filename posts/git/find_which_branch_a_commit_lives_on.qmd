@@ -1,0 +1,78 @@
+---
+title: "How to find which branch a commit lives on"
+author: "Damien Martin"
+date: "2026-01-24"
+categories: [git]
+---
+
+When using git, I most commonly think about the branches, rather than the commits themselves.
+
+```{mermaid}
+---
+title: Example Git diagram
+---
+gitGraph
+   commit
+   commit
+   branch develop
+   checkout develop
+   commit id: "QuestionCommit"
+   commit
+   branch exp
+   commit
+   commit id: "E-888abc0"
+   checkout develop
+   commit id: "D-1234abc"
+   checkout main
+   commit
+   commit id: "M-888wxyz"
+```
+
+When we switch to a branch, we are on the commit that is the latest commit on that branch. With the current example repo state 
+
+| Switching to branch | Takes you to commit |
+|---------------------|---------------------|
+| main                | M-888wxyz           |
+| develop             | D-1234abc           |
+| exp                 | E-888abc0           |
+
+If we learned that some random commit, such as `QuestionCommit`, was responsible for a deployment, we could reasonable ask questions like: 
+
+- Is this commit head of any branch?
+  - In this case, the answer is No.
+- Which branch(es) does this commit lie on?
+  - This question has the "obvious" answer that it is on the "develop" branch, but we will give a more detailed answer below.
+
+Ideally you would only be deploying from one branch, but if you find a stray deployment it is perhaps more important you can answer these questions!
+
+## Which branch is `QuestionCommit` on?
+
+There are a couple of different ways of answering this:
+
+1. When this commit was the head of a branch, what branch was that?
+   * Asked this way, it is on `develop` branch.
+2. When looking at our current branches, which branch(es) is this branch in the history of?
+   * Asked this way, `QuestionCommit` is in the history of the head of the `develop` and `exp` branches.
+
+The value in asking this way is that `develop` and `exp` are both valid places to consider "fast-forwarding" the commit to before making additional changes
+(or you can branch directly off this commit).
+
+What you usually want is the first one:
+```bash
+git branch --contains QuestionCommit
+```
+
+
+This will show you what changed in that particular commit:
+```bash
+git show --decorate QuestionCommit
+```
+
+
+### The git-graph 
+
+You can also look for it in the "a dog" graph:
+```bash 
+ git log --oneline --decorate --graph --all
+ ```
+ and then search for your commit. Here `a dog` comes from "all, decorate, oneline, graph".
